@@ -62,9 +62,12 @@ export default function SetupWizard() {
         total_savings: parseFloat(formData.total_savings) || 0,
         tfsa_balance: parseFloat(formData.tfsa_balance) || 0,
         rrsp_balance: parseFloat(formData.rrsp_balance) || 0,
+        tfsa_contribution_room: parseFloat(formData.tfsa_contribution_room) || 7000,
+        rrsp_contribution_room: parseFloat(formData.rrsp_contribution_room) || 31560,
         tfsa_goal: parseFloat(formData.tfsa_goal) || 7000,
         rrsp_goal: parseFloat(formData.rrsp_goal) || 31560,
         debt_goal: parseFloat(formData.debt_goal) || 0,
+        ei_opt_in: formData.ei_opt_in || false,
       };
       await profileAPI.create(profileData);
       await refreshUser();
