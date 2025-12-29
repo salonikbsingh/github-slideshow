@@ -159,24 +159,30 @@ class TaxEngine:
         (float('inf'), 0.33) # Rate 5: 33% on income over $258,482
     ]
     
-    # 2026 Ontario Tax Brackets
+    # 2026 Ontario Tax Brackets (Indexed)
     ONTARIO_BRACKETS = [
-        (51446, 0.0505),
-        (51446, 0.0915),
-        (67526, 0.1116),
-        (70000, 0.1216),
-        (float('inf'), 0.1316)
+        (53891, 0.0505),     # 5.05% on first $53,891
+        (53894, 0.0915),     # 9.15% on $53,891 to $107,785
+        (42215, 0.1116),     # 11.16% on $107,785 to $150,000
+        (70000, 0.1216),     # 12.16% on $150,000 to $220,000
+        (float('inf'), 0.1316) # 13.16% on everything over $220,000
     ]
     
-    # 2026 Basic Personal Amount
-    BASIC_PERSONAL_AMOUNT = 16452
+    # 2026 Basic Personal Amounts
+    FEDERAL_BPA = 16452
+    ONTARIO_BPA = 12989
     
-    # 2026 CPP/CPP2 rates
+    # 2026 CPP/CPP2 rates (Self-Employed pays both portions)
     CPP_MAX_EARNINGS = 74600
     CPP2_MAX_EARNINGS = 85000
-    CPP_RATE = 0.119  # 11.9% for self-employed
+    CPP_RATE = 0.119  # 11.9% for self-employed (employee + employer)
     CPP2_RATE = 0.08  # 8% for CPP2
     CPP_EXEMPTION = 3500
+    
+    # 2026 EI for Self-Employed (Optional)
+    EI_RATE = 0.0163  # 1.63%
+    EI_MAX_INSURABLE = 68900
+    EI_MAX_PREMIUM = 1123.07
     
     # Class 54 EV Depreciation - 55% on first $61,000 + tax
     EV_CLASS_54_RATE = 0.55
@@ -187,8 +193,8 @@ class TaxEngine:
     
     @classmethod
     def calculate_federal_tax(cls, income: float) -> float:
-        # Apply Basic Personal Amount
-        taxable_income = max(0, income - cls.BASIC_PERSONAL_AMOUNT)
+        """Calculate Federal tax with BPA applied"""
+        taxable_income = max(0, income - cls.FEDERAL_BPA)
         tax = 0
         remaining = taxable_income
         for bracket_size, rate in cls.FEDERAL_BRACKETS:
@@ -201,9 +207,8 @@ class TaxEngine:
     
     @classmethod
     def calculate_ontario_tax(cls, income: float) -> float:
-        # Ontario also has a basic personal amount (~$12,399 for 2026)
-        ontario_bpa = 12399
-        taxable_income = max(0, income - ontario_bpa)
+        """Calculate Ontario Provincial tax with BPA applied"""
+        taxable_income = max(0, income - cls.ONTARIO_BPA)
         tax = 0
         remaining = taxable_income
         for bracket_size, rate in cls.ONTARIO_BRACKETS:
@@ -215,7 +220,50 @@ class TaxEngine:
         return tax
     
     @classmethod
+    def calculate_ontario_health_premium(cls, taxable_income: float) -> float:
+        """
+        Ontario Health Premium (OHP) - Sliding Scale
+        Based on taxable income thresholds
+        """
+        if taxable_income <= 20000:
+            return 0
+        elif taxable_income <= 25000:
+            # $0 + 6% of income over $20,000 (max $300)
+            return min(300, (taxable_income - 20000) * 0.06)
+        elif taxable_income <= 36000:
+            # $300 base
+            return 300
+        elif taxable_income <= 38500:
+            # $300 + 6% of income over $36,000 (max $450)
+            return min(450, 300 + (taxable_income - 36000) * 0.06)
+        elif taxable_income <= 48000:
+            # $450 base
+            return 450
+        elif taxable_income <= 48600:
+            # $450 + 25% of income over $48,000 (max $600)
+            return min(600, 450 + (taxable_income - 48000) * 0.25)
+        elif taxable_income <= 72000:
+            # $600 base
+            return 600
+        elif taxable_income <= 72600:
+            # $600 + 25% of income over $72,000 (max $750)
+            return min(750, 600 + (taxable_income - 72000) * 0.25)
+        elif taxable_income <= 200000:
+            # $750 base
+            return 750
+        elif taxable_income <= 200600:
+            # $750 + 25% of income over $200,000 (max $900)
+            return min(900, 750 + (taxable_income - 200000) * 0.25)
+        else:
+            # Maximum $900
+            return 900
+    
+    @classmethod
     def calculate_cpp(cls, net_income: float) -> dict:
+        """
+        CPP/CPP2 for Self-Employed
+        Self-employed pay both employee AND employer portions (11.9% total)
+        """
         # CPP on first $74,600 (minus $3,500 exemption)
         cpp_pensionable = max(0, min(net_income, cls.CPP_MAX_EARNINGS) - cls.CPP_EXEMPTION)
         cpp = cpp_pensionable * cls.CPP_RATE
@@ -227,9 +275,45 @@ class TaxEngine:
         return {"cpp": cpp, "cpp2": cpp2, "total": cpp + cpp2}
     
     @classmethod
+    def calculate_ei(cls, net_income: float, opt_in: bool = False) -> float:
+        """
+        EI for Self-Employed (OPTIONAL)
+        Rate: 1.63%, Max Insurable: $68,900, Max Premium: $1,123.07
+        """
+        if not opt_in:
+            return 0
+        insurable_earnings = min(net_income, cls.EI_MAX_INSURABLE)
+        ei_premium = insurable_earnings * cls.EI_RATE
+        return min(ei_premium, cls.EI_MAX_PREMIUM)
+    
+    @classmethod
+    def calculate_total_tax(cls, net_income: float, ei_opt_in: bool = False) -> dict:
+        """
+        Calculate complete tax liability:
+        Federal + Ontario + OHP + CPP + CPP2 + EI (optional)
+        """
+        federal = cls.calculate_federal_tax(net_income)
+        ontario = cls.calculate_ontario_tax(net_income)
+        ohp = cls.calculate_ontario_health_premium(net_income)
+        cpp = cls.calculate_cpp(net_income)
+        ei = cls.calculate_ei(net_income, ei_opt_in)
+        
+        total = federal + ontario + ohp + cpp["total"] + ei
+        
+        return {
+            "federal": federal,
+            "ontario": ontario,
+            "ontario_health_premium": ohp,
+            "cpp": cpp["cpp"],
+            "cpp2": cpp["cpp2"],
+            "ei": ei,
+            "ei_opted_in": ei_opt_in,
+            "total": total
+        }
+    
+    @classmethod
     def calculate_ev_depreciation(cls, ucc: float, is_first_year: bool = False) -> dict:
-        # Apply half-year rule in first year
-        # Cap at $61,000 + 13% HST = $68,930
+        """Class 54 EV Depreciation - 55% on first $61,000 + tax"""
         applicable_ucc = min(ucc, cls.EV_CLASS_54_LIMIT * 1.13)
         rate = cls.EV_CLASS_54_RATE
         if is_first_year:
