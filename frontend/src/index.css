@@ -99,7 +99,7 @@
   }
   
   .finance-card {
-    @apply bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden relative group hover:border-zinc-700 transition-colors duration-300;
+    @apply bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden relative hover:border-zinc-700 transition-colors duration-300;
   }
   
   .finance-input {
