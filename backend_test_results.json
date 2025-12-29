@@ -1,6 +1,6 @@
 {
-  "total_tests": 39,
-  "passed_tests": 39,
+  "total_tests": 57,
+  "passed_tests": 57,
   "failed_tests": 0,
   "success_rate": 100.0,
   "test_results": [
@@ -8,235 +8,343 @@
       "test": "Root API Endpoint",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:13.725179"
+      "timestamp": "2025-12-29T05:33:20.249538"
     },
     {
       "test": "Health Check",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:13.762772"
+      "timestamp": "2025-12-29T05:33:20.289365"
     },
     {
-      "test": "Get 2026 Tax Brackets",
+      "test": "User Login (Test Credentials)",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:13.795193"
-    },
-    {
-      "test": "2026 First Tax Bracket",
-      "success": true,
-      "details": "14% on first $58,523 confirmed",
-      "timestamp": "2025-12-29T04:14:13.795889"
-    },
-    {
-      "test": "2026 Basic Personal Amount",
-      "success": true,
-      "details": "BPA: $16,452",
-      "timestamp": "2025-12-29T04:14:13.795916"
-    },
-    {
-      "test": "User Registration",
-      "success": true,
-      "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.055732"
-    },
-    {
-      "test": "User Login",
-      "success": true,
-      "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.353426"
+      "timestamp": "2025-12-29T05:33:20.546916"
     },
     {
       "test": "Get Current User",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.392215"
+      "timestamp": "2025-12-29T05:33:20.582255"
+    },
+    {
+      "test": "Dashboard Tax Breakdown",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.616940"
+    },
+    {
+      "test": "Dashboard Tax Components",
+      "success": true,
+      "details": "All 6 tax components present",
+      "timestamp": "2025-12-29T05:33:20.617496"
+    },
+    {
+      "test": "EI Opt-in Status",
+      "success": true,
+      "details": "EI opted in: True",
+      "timestamp": "2025-12-29T05:33:20.617517"
+    },
+    {
+      "test": "EI Premium Calculation",
+      "success": true,
+      "details": "EI Premium: $1102.29",
+      "timestamp": "2025-12-29T05:33:20.617540"
+    },
+    {
+      "test": "Ontario Health Premium",
+      "success": true,
+      "details": "OHP: $600.00",
+      "timestamp": "2025-12-29T05:33:20.617548"
+    },
+    {
+      "test": "Get Current Profile",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.692215"
+    },
+    {
+      "test": "Update Profile with Contribution Room",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.731395"
+    },
+    {
+      "test": "Verify Profile Update",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.765646"
+    },
+    {
+      "test": "TFSA Contribution Room Save",
+      "success": true,
+      "details": "TFSA Room: $95,000",
+      "timestamp": "2025-12-29T05:33:20.766370"
+    },
+    {
+      "test": "RRSP Contribution Room Save",
+      "success": true,
+      "details": "RRSP Room: $85,000",
+      "timestamp": "2025-12-29T05:33:20.766387"
+    },
+    {
+      "test": "EI Opt-in Save",
+      "success": true,
+      "details": "EI opt-in saved correctly",
+      "timestamp": "2025-12-29T05:33:20.766392"
+    },
+    {
+      "test": "Tax Projection with RRSP",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.805656"
+    },
+    {
+      "test": "Tax Projection RRSP Room",
+      "success": true,
+      "details": "User's RRSP Room: $85,000",
+      "timestamp": "2025-12-29T05:33:20.806292"
+    },
+    {
+      "test": "Tax Projection Current OHP",
+      "success": true,
+      "details": "Current OHP: $600.00",
+      "timestamp": "2025-12-29T05:33:20.806312"
+    },
+    {
+      "test": "Tax Projection Projected OHP",
+      "success": true,
+      "details": "Projected OHP: $450.00",
+      "timestamp": "2025-12-29T05:33:20.806319"
+    },
+    {
+      "test": "Tax Projection OHP Savings",
+      "success": true,
+      "details": "OHP Savings: $150.00",
+      "timestamp": "2025-12-29T05:33:20.806325"
+    },
+    {
+      "test": "Set EI Opt-in True",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.839522"
+    },
+    {
+      "test": "Dashboard with EI On",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.878881"
+    },
+    {
+      "test": "Set EI Opt-in False",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.916392"
+    },
+    {
+      "test": "Dashboard with EI Off",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:20.995849"
+    },
+    {
+      "test": "EI Toggle Effect",
+      "success": true,
+      "details": "EI: $1123.07 \u2192 $0.00",
+      "timestamp": "2025-12-29T05:33:20.996473"
+    },
+    {
+      "test": "Reset EI Opt-in True",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T05:33:21.045464"
     },
     {
       "test": "Create Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.431409"
+      "timestamp": "2025-12-29T05:33:21.083934"
     },
     {
       "test": "Get Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.470427"
+      "timestamp": "2025-12-29T05:33:21.118796"
     },
     {
       "test": "Update Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.505396"
+      "timestamp": "2025-12-29T05:33:21.155228"
     },
     {
       "test": "Get Dashboard Data",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.596964"
+      "timestamp": "2025-12-29T05:33:21.189244"
     },
     {
       "test": "Dashboard Structure",
       "success": true,
       "details": "All required fields present",
-      "timestamp": "2025-12-29T04:14:14.597596"
+      "timestamp": "2025-12-29T05:33:21.189839"
     },
     {
       "test": "Create Transaction",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.632256"
+      "timestamp": "2025-12-29T05:33:21.223889"
     },
     {
       "test": "Get Transactions",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.670361"
+      "timestamp": "2025-12-29T05:33:21.260867"
     },
     {
       "test": "Delete Transaction",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.703842"
+      "timestamp": "2025-12-29T05:33:21.307687"
     },
     {
       "test": "Create Mileage Log",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.740854"
+      "timestamp": "2025-12-29T05:33:21.347771"
     },
     {
       "test": "Get Mileage Logs",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.779647"
+      "timestamp": "2025-12-29T05:33:21.382391"
     },
     {
       "test": "Delete Mileage Log",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.815341"
+      "timestamp": "2025-12-29T05:33:21.416916"
     },
     {
       "test": "Create Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.850627"
+      "timestamp": "2025-12-29T05:33:21.457370"
     },
     {
       "test": "EV Rebate Calculation",
       "success": true,
       "details": "Rebate: $1.36",
-      "timestamp": "2025-12-29T04:14:14.851243"
+      "timestamp": "2025-12-29T05:33:21.458036"
     },
     {
       "test": "Get Charging Sessions",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.885229"
+      "timestamp": "2025-12-29T05:33:21.491711"
     },
     {
       "test": "Delete Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.923884"
+      "timestamp": "2025-12-29T05:33:21.524650"
     },
     {
       "test": "Create Sister Bill",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.959805"
+      "timestamp": "2025-12-29T05:33:21.566739"
     },
     {
       "test": "Bill Split Calculation",
       "success": true,
       "details": "Split: $100.00",
-      "timestamp": "2025-12-29T04:14:14.960417"
+      "timestamp": "2025-12-29T05:33:21.567355"
     },
     {
       "test": "Get Sister Bills",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:14.995251"
+      "timestamp": "2025-12-29T05:33:21.640117"
     },
     {
       "test": "Get Sister Summary",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:15.038743"
+      "timestamp": "2025-12-29T05:33:21.673734"
     },
     {
       "test": "Delete Sister Bill",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:15.075115"
+      "timestamp": "2025-12-29T05:33:21.706215"
     },
     {
       "test": "CSV Export",
       "success": true,
       "details": "CSV file generated successfully",
-      "timestamp": "2025-12-29T04:14:15.161407"
+      "timestamp": "2025-12-29T05:33:21.747382"
     },
     {
       "test": "TOTP Setup",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:17.480602"
+      "timestamp": "2025-12-29T05:33:24.056513"
     },
     {
       "test": "TOTP Backup Codes",
       "success": true,
       "details": "Generated 10 backup codes",
-      "timestamp": "2025-12-29T04:14:17.481254"
+      "timestamp": "2025-12-29T05:33:24.057171"
     },
     {
       "test": "Create Charging Session (Grizzl-E)",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:17.513680"
+      "timestamp": "2025-12-29T05:33:24.092180"
     },
     {
       "test": "Grizzl-E Rebate Calculation",
       "success": true,
       "details": "Rebate: $3.00",
-      "timestamp": "2025-12-29T04:14:17.514267"
+      "timestamp": "2025-12-29T05:33:24.092852"
     },
     {
       "test": "Dashboard Grizzl-E Data",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:17.550231"
+      "timestamp": "2025-12-29T05:33:24.129687"
     },
     {
       "test": "Dashboard Grizzl-E Rebate",
       "success": true,
       "details": "Rebate shown: $0.00",
-      "timestamp": "2025-12-29T04:14:17.550825"
+      "timestamp": "2025-12-29T05:33:24.130287"
     },
     {
       "test": "Delete Test Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:17.583952"
+      "timestamp": "2025-12-29T05:33:24.205088"
     },
     {
       "test": "Create Charging for PDF Test",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:17.617877"
+      "timestamp": "2025-12-29T05:33:24.286132"
     },
     {
       "test": "Sister PDF Generation",
       "success": true,
       "details": "PDF generated successfully",
-      "timestamp": "2025-12-29T04:14:17.657942"
+      "timestamp": "2025-12-29T05:33:24.368731"
     },
     {
       "test": "Delete PDF Test Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T04:14:17.694070"
+      "timestamp": "2025-12-29T05:33:24.442865"
     }
   ]
 }
