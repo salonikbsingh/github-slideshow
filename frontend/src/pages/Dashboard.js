@@ -61,8 +61,10 @@ export default function Dashboard() {
   const taxBreakdown = [
     { name: 'Federal', value: data.tax_liability.federal },
     { name: 'Ontario', value: data.tax_liability.ontario },
+    { name: 'OHP', value: data.tax_liability.ontario_health_premium || 0 },
     { name: 'CPP', value: data.tax_liability.cpp },
     { name: 'CPP2', value: data.tax_liability.cpp2 },
+    { name: 'EI', value: data.tax_liability.ei || 0 },
   ].filter(item => item.value > 0);
 
   return (
