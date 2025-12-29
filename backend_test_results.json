@@ -1,0 +1,164 @@
+{
+  "total_tests": 26,
+  "passed_tests": 26,
+  "failed_tests": 0,
+  "success_rate": 100.0,
+  "test_results": [
+    {
+      "test": "Root API Endpoint",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.181893"
+    },
+    {
+      "test": "Health Check",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.228528"
+    },
+    {
+      "test": "User Registration",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.526684"
+    },
+    {
+      "test": "User Login",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.794954"
+    },
+    {
+      "test": "Get Current User",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.843435"
+    },
+    {
+      "test": "Create Profile",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.900087"
+    },
+    {
+      "test": "Get Profile",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.939885"
+    },
+    {
+      "test": "Update Profile",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:42.984769"
+    },
+    {
+      "test": "Get Dashboard Data",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.067040"
+    },
+    {
+      "test": "Dashboard Structure",
+      "success": true,
+      "details": "All required fields present",
+      "timestamp": "2025-12-29T03:24:43.067672"
+    },
+    {
+      "test": "Create Transaction",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.118332"
+    },
+    {
+      "test": "Get Transactions",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.155842"
+    },
+    {
+      "test": "Delete Transaction",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.195372"
+    },
+    {
+      "test": "Create Mileage Log",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.253472"
+    },
+    {
+      "test": "Get Mileage Logs",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.290503"
+    },
+    {
+      "test": "Delete Mileage Log",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.331675"
+    },
+    {
+      "test": "Create Charging Session",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.385125"
+    },
+    {
+      "test": "EV Rebate Calculation",
+      "success": true,
+      "details": "Rebate: $1.36",
+      "timestamp": "2025-12-29T03:24:43.385784"
+    },
+    {
+      "test": "Get Charging Sessions",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.427790"
+    },
+    {
+      "test": "Delete Charging Session",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.462525"
+    },
+    {
+      "test": "Create Sister Bill",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.521152"
+    },
+    {
+      "test": "Bill Split Calculation",
+      "success": true,
+      "details": "Split: $100.00",
+      "timestamp": "2025-12-29T03:24:43.521865"
+    },
+    {
+      "test": "Get Sister Bills",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.562695"
+    },
+    {
+      "test": "Get Sister Summary",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.607172"
+    },
+    {
+      "test": "Delete Sister Bill",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T03:24:43.643615"
+    },
+    {
+      "test": "CSV Export",
+      "success": true,
+      "details": "CSV file generated successfully",
+      "timestamp": "2025-12-29T03:24:43.688502"
+    }
+  ]
+}
