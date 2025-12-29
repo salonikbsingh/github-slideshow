@@ -67,6 +67,10 @@ class ProfileCreate(BaseModel):
     total_savings: float = 0
     tfsa_balance: float = 0
     rrsp_balance: float = 0
+    # Contribution room (includes unused room from previous years)
+    tfsa_contribution_room: float = 7000  # Available room to contribute
+    rrsp_contribution_room: float = 31560  # Available room to contribute
+    # Annual goals (how much to contribute this year)
     tfsa_goal: float = 7000
     rrsp_goal: float = 31560
     debt_goal: float = 0
