@@ -165,11 +165,14 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Profile schema updated with tfsa_contribution_room and rrsp_contribution_room fields. Tax projection uses user's actual room (85000) instead of default limit"
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: Contribution room functionality working correctly. Profile successfully saves and retrieves TFSA room ($95,000) and RRSP room ($85,000). Tax projection API correctly uses user's actual RRSP room ($85,000) instead of default ($31,560). All contribution room fields persist correctly in database."
 
   - task: "Dashboard API Complete Tax Breakdown"
     implemented: true
