@@ -1,0 +1,190 @@
+{
+  "identity": {
+    "name": "E1",
+    "role": "The Anti-AI Designer",
+    "mission": "Create a professional-grade, mobile-first CAD Finance Suite that feels like a 'Dark Control Room'—precise, secure, and aesthetically superior to generic SaaS dashboards.",
+    "principles": [
+      "Fusion over Imitation: Mix Swiss precision with Cyberpunk utility.",
+      "Emotion First: The user should feel 'In Control' and 'Secure'.",
+      "Content is King: Data is the hero; UI is the stage.",
+      "Zoom In: Focus on the numbers that matter (Net Worth, Tax Liability).",
+      "Negative Space: Don't clutter; let the data breathe.",
+      "Contrast: High contrast for readability in dark mode."
+    ]
+  },
+  "design_system": {
+    "theme": "dark",
+    "typography": {
+      "headings": {
+        "family": "Outfit, sans-serif",
+        "weights": ["500", "600", "700"],
+        "usage": "Page titles, Card headers, Key metrics",
+        "cdn_url": "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
+      },
+      "body": {
+        "family": "Manrope, sans-serif",
+        "weights": ["400", "500"],
+        "usage": "General text, Labels, Inputs",
+        "cdn_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap"
+      },
+      "mono": {
+        "family": "JetBrains Mono, monospace",
+        "weights": ["400"],
+        "usage": "Financial data tables, Transaction IDs, Code snippets",
+        "cdn_url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap"
+      }
+    },
+    "colors": {
+      "palette": {
+        "background": "#09090b",
+        "surface": "#18181b",
+        "surface_highlight": "#27272a",
+        "border": "#27272a",
+        "text_primary": "#fafafa",
+        "text_secondary": "#a1a1aa",
+        "primary": "#10b981",
+        "primary_foreground": "#022c22",
+        "secondary": "#f59e0b",
+        "secondary_foreground": "#451a03",
+        "accent_purple": "#8b5cf6",
+        "danger": "#ef4444",
+        "success": "#10b981"
+      },
+      "gradients": {
+        "subtle_glow": "radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
+        "tracing_beam": "linear-gradient(90deg, transparent, #10b981, transparent)"
+      }
+    },
+    "spacing": {
+      "scale": "tailwind",
+      "container_padding": "p-4 md:p-8 lg:p-12",
+      "section_gap": "gap-8",
+      "component_gap": "gap-4"
+    },
+    "visual_enhancers": {
+      "glassmorphism": {
+        "mobile_nav": "backdrop-blur-xl bg-black/60 border-t border-white/10",
+        "card_overlay": "backdrop-blur-md bg-white/5 border border-white/10"
+      },
+      "borders": {
+        "default": "border border-zinc-800",
+        "active": "border border-emerald-500/50"
+      },
+      "shadows": {
+        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3)",
+        "glow": "0 0 20px rgba(16, 185, 129, 0.2)"
+      },
+      "textures": {
+        "noise": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E\")"
+      }
+    }
+  },
+  "layout_strategy": {
+    "grid_system": {
+      "mobile": "grid-cols-1 gap-4",
+      "desktop": "grid-cols-12 gap-6",
+      "bento_rules": [
+        "Hero Metric: col-span-full md:col-span-6 lg:col-span-4 row-span-2",
+        "Standard Card: col-span-1 md:col-span-6 lg:col-span-4",
+        "Tall List: col-span-1 md:col-span-6 lg:col-span-4 row-span-2"
+      ]
+    },
+    "navigation": {
+      "mobile": "Bottom fixed glass bar with 4-5 key icons (Home, Transactions, Add, Reports, Profile)",
+      "desktop": "Left vertical sidebar, collapsible"
+    },
+    "fab_strategy": {
+      "position": "fixed bottom-24 right-6 md:bottom-12 md:right-12",
+      "style": "bg-emerald-500 hover:bg-emerald-400 text-black shadow-glow rounded-full p-4 transition-transform hover:scale-110"
+    }
+  },
+  "components": {
+    "cards": {
+      "style": "bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden relative group",
+      "hover_effect": "group-hover:border-zinc-700 transition-colors duration-300",
+      "content_padding": "p-6"
+    },
+    "buttons": {
+      "primary": "bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg px-6 py-2.5 transition-all shadow-lg shadow-emerald-900/20",
+      "secondary": "bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-medium rounded-lg px-6 py-2.5 border border-zinc-700",
+      "ghost": "text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-lg px-4 py-2"
+    },
+    "inputs": {
+      "style": "bg-zinc-950 border border-zinc-800 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 rounded-lg px-4 py-3 text-zinc-100 placeholder:text-zinc-600 transition-all"
+    },
+    "charts": {
+      "library": "Recharts",
+      "theme": {
+        "grid": "#27272a",
+        "tooltip_bg": "#18181b",
+        "tooltip_border": "#3f3f46",
+        "colors": ["#10b981", "#f59e0b", "#8b5cf6", "#3b82f6", "#ef4444"]
+      }
+    }
+  },
+  "assets": {
+    "images": [
+      {
+        "category": "background",
+        "url": "https://images.unsplash.com/photo-1602513531640-f41c6939e38b",
+        "description": "Toronto Skyline Night - Use for Login/Welcome screen background with heavy overlay"
+      },
+      {
+        "category": "feature",
+        "url": "https://images.unsplash.com/photo-1707758283398-7df21adba23a",
+        "description": "EV Charging Station - Use for EV Module header or card background"
+      }
+    ],
+    "icons": {
+      "library": "lucide-react",
+      "style": "stroke-width={1.5}"
+    }
+  },
+  "motion": {
+    "library": "framer-motion",
+    "transitions": {
+      "page": {
+        "initial": { "opacity": 0, "y": 20 },
+        "animate": { "opacity": 1, "y": 0 },
+        "exit": { "opacity": 0, "y": -20 },
+        "transition": { "duration": 0.3, "ease": "easeOut" }
+      },
+      "stagger": {
+        "container": {
+          "hidden": { "opacity": 0 },
+          "show": {
+            "opacity": 1,
+            "transition": { "staggerChildren": 0.1 }
+          }
+        },
+        "item": {
+          "hidden": { "opacity": 0, "y": 10 },
+          "show": { "opacity": 1, "y": 0 }
+        }
+      }
+    }
+  },
+  "accessibility": {
+    "contrast_check": "Ensure all text meets WCAG AA (4.5:1) against the dark background.",
+    "focus_states": "Visible emerald ring offset-2 ring-offset-black on focus.",
+    "reduced_motion": "Respect prefers-reduced-motion media query."
+  },
+  "instructions_to_main_agent": [
+    "1. INSTALL FONTS: Add the Google Fonts links to the <head> of index.html immediately.",
+    "2. CONFIGURE TAILWIND: Update tailwind.config.js to include the new font families (Outfit, Manrope, JetBrains Mono) and the custom color palette.",
+    "3. SETUP SHADCN: When using Shadcn components, override the default 'radius' to '0.5rem' or '0.75rem' (rounded-lg/xl) but keep it consistent.",
+    "4. MOBILE FIRST: Always design the mobile view first. Use 'hidden md:block' for desktop-only elements.",
+    "5. DARK MODE DEFAULT: Force dark mode class on the html/body tag. Do not implement a light mode toggle unless requested later.",
+    "6. USE LUCIDE ICONS: Use lucide-react for all iconography.",
+    "7. DATA-TESTID: Add data-testid attributes to all interactive elements (buttons, inputs, links).",
+    "8. SISTER MODULE: Use a distinct accent color (e.g., Violet/Purple) for the 'Sister Module' to visually differentiate it from the main Finance Dashboard.",
+    "9. NO GRADIENT TEXT: Avoid gradient text for accessibility; use gradients only for borders or subtle backgrounds."
+  ],
+  "universal_guidelines": [
+    "Avoid 'AI Slop': No generic centered layouts. Use asymmetry.",
+    "Micro-animations: Hover states, active states, and entrance animations are mandatory.",
+    "Spacing: Use p-6 or p-8 where you'd normally use p-4.",
+    "Glassmorphism: Use it sparingly (Nav, Toasts, Modals) - don't overuse it on content cards.",
+    "Charts: Keep them simple and legible. Don't use 3D charts."
+  ]
+}
