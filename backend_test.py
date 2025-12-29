@@ -380,45 +380,101 @@ class CADFinanceAPITester:
                 200
             )
 
-    def test_2026_tax_features(self):
-        """Test new 2026 tax features"""
-        print("\n🔍 Testing 2026 Tax Features...")
-        
-        # Test tax brackets API (no auth required)
-        success, response = self.run_test("Get 2026 Tax Brackets", "GET", "api/tax/brackets", 200)
-        
-        if success:
-            # Verify 2026 tax bracket structure
-            if 'federal' in response and 'brackets' in response['federal']:
-                brackets = response['federal']['brackets']
-                # Check first bracket is 14% on first $58,523
-                if len(brackets) > 0:
-                    first_bracket = brackets[0]
-                    if first_bracket.get('threshold') == 58523 and first_bracket.get('rate') == '14%':
-                        self.log_test("2026 First Tax Bracket", True, "14% on first $58,523 confirmed")
-                    else:
-                        self.log_test("2026 First Tax Bracket", False, f"Expected 14% on $58,523, got {first_bracket}")
-                
-                # Check Basic Personal Amount
-                bpa = response['federal'].get('basic_personal_amount')
-                if bpa == 16452:
-                    self.log_test("2026 Basic Personal Amount", True, f"BPA: ${bpa:,}")
-                else:
-                    self.log_test("2026 Basic Personal Amount", False, f"Expected $16,452, got ${bpa:,}")
-            else:
-                self.log_test("Tax Brackets Structure", False, "Missing federal brackets data")
+    def test_2026_ontario_tax_implementation(self):
+        """Test specific 2026 Ontario tax implementation features"""
+        print("\n🔍 Testing 2026 Ontario Tax Implementation...")
         
         if not self.token:
-            print("    ⚠️ Skipping authenticated tax tests - no auth token")
+            print("    ⚠️ Skipping Ontario tax tests - no auth token")
             return
+
+        # Test 1: Dashboard Tax Breakdown - Verify all 6 components
+        print("    Testing Dashboard Tax Breakdown...")
+        success, response = self.run_test("Dashboard Tax Breakdown", "GET", "api/dashboard", 200)
         
-        # Test tax projection API
-        projection_data = {
-            "rrsp_contribution": 10000
-        }
+        if success and 'tax_liability' in response:
+            tax_data = response['tax_liability']
+            required_components = ['federal', 'ontario', 'ontario_health_premium', 'cpp', 'cpp2', 'ei', 'ei_opted_in']
+            missing_components = [comp for comp in required_components if comp not in tax_data]
+            
+            if missing_components:
+                self.log_test("Dashboard Tax Components", False, f"Missing: {missing_components}")
+            else:
+                self.log_test("Dashboard Tax Components", True, "All 6 tax components present")
+                
+                # Verify EI opt-in status for test user (should be True)
+                ei_opted_in = tax_data.get('ei_opted_in', False)
+                if ei_opted_in:
+                    self.log_test("EI Opt-in Status", True, f"EI opted in: {ei_opted_in}")
+                    # Verify EI amount is calculated (should be > 0)
+                    ei_amount = tax_data.get('ei', 0)
+                    if ei_amount > 0:
+                        self.log_test("EI Premium Calculation", True, f"EI Premium: ${ei_amount:.2f}")
+                    else:
+                        self.log_test("EI Premium Calculation", False, "EI amount is 0 despite opt-in")
+                else:
+                    self.log_test("EI Opt-in Status", False, "Test user should have EI opted in")
+                
+                # Verify Ontario Health Premium is calculated
+                ohp_amount = tax_data.get('ontario_health_premium', 0)
+                if ohp_amount > 0:
+                    self.log_test("Ontario Health Premium", True, f"OHP: ${ohp_amount:.2f}")
+                else:
+                    self.log_test("Ontario Health Premium", False, "OHP amount is 0")
+
+        # Test 2: Profile with Contribution Room
+        print("    Testing Profile Contribution Room...")
         
+        # First get current profile
+        success, current_profile = self.run_test("Get Current Profile", "GET", "api/profile", 200)
+        
+        if success:
+            # Update profile with contribution room values
+            profile_data = current_profile.copy() if current_profile else {}
+            profile_data.update({
+                "tfsa_contribution_room": 95000.0,  # Test value
+                "rrsp_contribution_room": 85000.0,  # Test value from review request
+                "ei_opt_in": True  # Ensure EI is opted in
+            })
+            
+            success, response = self.run_test(
+                "Update Profile with Contribution Room",
+                "PUT",
+                "api/profile",
+                200,
+                data=profile_data
+            )
+            
+            if success:
+                # Verify the values were saved by getting profile again
+                success, updated_profile = self.run_test("Verify Profile Update", "GET", "api/profile", 200)
+                
+                if success:
+                    tfsa_room = updated_profile.get('tfsa_contribution_room', 0)
+                    rrsp_room = updated_profile.get('rrsp_contribution_room', 0)
+                    ei_opt_in = updated_profile.get('ei_opt_in', False)
+                    
+                    if tfsa_room == 95000.0:
+                        self.log_test("TFSA Contribution Room Save", True, f"TFSA Room: ${tfsa_room:,.0f}")
+                    else:
+                        self.log_test("TFSA Contribution Room Save", False, f"Expected $95,000, got ${tfsa_room:,.0f}")
+                    
+                    if rrsp_room == 85000.0:
+                        self.log_test("RRSP Contribution Room Save", True, f"RRSP Room: ${rrsp_room:,.0f}")
+                    else:
+                        self.log_test("RRSP Contribution Room Save", False, f"Expected $85,000, got ${rrsp_room:,.0f}")
+                    
+                    if ei_opt_in:
+                        self.log_test("EI Opt-in Save", True, "EI opt-in saved correctly")
+                    else:
+                        self.log_test("EI Opt-in Save", False, "EI opt-in not saved")
+
+        # Test 3: Tax Projection with User's RRSP Room
+        print("    Testing Tax Projection with User's RRSP Room...")
+        
+        projection_data = {"rrsp_contribution": 20000}
         success, response = self.run_test(
-            "Tax Projection Calculator",
+            "Tax Projection with RRSP",
             "POST",
             "api/tax/projection",
             200,
@@ -426,19 +482,80 @@ class CADFinanceAPITester:
         )
         
         if success:
-            # Verify projection structure
-            required_fields = ['current', 'projected', 'savings', 'bracket_dropped']
-            missing_fields = [field for field in required_fields if field not in response]
-            if missing_fields:
-                self.log_test("Tax Projection Structure", False, f"Missing fields: {missing_fields}")
+            # Verify user's actual RRSP room is returned (85000, not default 31560)
+            rrsp_room = response.get('rrsp_contribution_room', 0)
+            if rrsp_room == 85000:
+                self.log_test("Tax Projection RRSP Room", True, f"User's RRSP Room: ${rrsp_room:,.0f}")
             else:
-                self.log_test("Tax Projection Structure", True, "All required fields present")
+                self.log_test("Tax Projection RRSP Room", False, f"Expected $85,000, got ${rrsp_room:,.0f}")
+            
+            # Verify OHP appears in current and projected sections
+            current_ohp = response.get('current', {}).get('ontario_health_premium', 0)
+            projected_ohp = response.get('projected', {}).get('ontario_health_premium', 0)
+            
+            if current_ohp > 0:
+                self.log_test("Tax Projection Current OHP", True, f"Current OHP: ${current_ohp:.2f}")
+            else:
+                self.log_test("Tax Projection Current OHP", False, "Current OHP is 0")
+            
+            if 'projected' in response and 'ontario_health_premium' in response['projected']:
+                self.log_test("Tax Projection Projected OHP", True, f"Projected OHP: ${projected_ohp:.2f}")
+            else:
+                self.log_test("Tax Projection Projected OHP", False, "Projected OHP missing")
+            
+            # Verify OHP savings calculation
+            ohp_savings = response.get('savings', {}).get('ohp', 0)
+            if 'ohp' in response.get('savings', {}):
+                self.log_test("Tax Projection OHP Savings", True, f"OHP Savings: ${ohp_savings:.2f}")
+            else:
+                self.log_test("Tax Projection OHP Savings", False, "OHP savings not calculated")
+
+        # Test 4: EI Opt-in Toggle Effect
+        print("    Testing EI Opt-in Toggle Effect...")
+        
+        # First, ensure EI is opted in and get current dashboard
+        profile_data = {"ei_opt_in": True}
+        success, response = self.run_test(
+            "Set EI Opt-in True",
+            "PUT",
+            "api/profile",
+            200,
+            data=profile_data
+        )
+        
+        if success:
+            # Get dashboard with EI opted in
+            success, dashboard_ei_on = self.run_test("Dashboard with EI On", "GET", "api/dashboard", 200)
+            
+            if success:
+                ei_amount_on = dashboard_ei_on.get('tax_liability', {}).get('ei', 0)
                 
-                # Verify RRSP impact calculation
-                if response.get('savings', {}).get('total', 0) > 0:
-                    self.log_test("RRSP Tax Savings", True, f"Savings: ${response['savings']['total']:.2f}")
-                else:
-                    self.log_test("RRSP Tax Savings", False, "No tax savings calculated")
+                # Now toggle EI off
+                profile_data = {"ei_opt_in": False}
+                success, response = self.run_test(
+                    "Set EI Opt-in False",
+                    "PUT",
+                    "api/profile",
+                    200,
+                    data=profile_data
+                )
+                
+                if success:
+                    # Get dashboard with EI opted out
+                    success, dashboard_ei_off = self.run_test("Dashboard with EI Off", "GET", "api/dashboard", 200)
+                    
+                    if success:
+                        ei_amount_off = dashboard_ei_off.get('tax_liability', {}).get('ei', 0)
+                        
+                        # Verify EI changes from positive amount to 0
+                        if ei_amount_on > 0 and ei_amount_off == 0:
+                            self.log_test("EI Toggle Effect", True, f"EI: ${ei_amount_on:.2f} → ${ei_amount_off:.2f}")
+                        else:
+                            self.log_test("EI Toggle Effect", False, f"Expected EI to change from >0 to 0, got {ei_amount_on:.2f} → {ei_amount_off:.2f}")
+                
+                # Reset EI to opted in for other tests
+                profile_data = {"ei_opt_in": True}
+                self.run_test("Reset EI Opt-in True", "PUT", "api/profile", 200, data=profile_data)
 
     def test_totp_backup_codes(self):
         """Test TOTP setup returns backup codes"""
