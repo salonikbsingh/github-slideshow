@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -125,7 +125,7 @@ export default function Layout({ children }) {
               </div>
             }
           >
-            {React.Children.count(children) > 0 ? children : <Dashboard />}
+            <Outlet />
           </React.Suspense>
         </div>
       </main>
