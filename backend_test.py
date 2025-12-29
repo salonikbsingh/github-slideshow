@@ -95,36 +95,13 @@ class CADFinanceAPITester:
         """Test complete authentication flow"""
         print("\n🔍 Testing Authentication Flow...")
         
-        # Generate unique test user
-        timestamp = int(datetime.now().timestamp())
-        test_email = f"test.user.{timestamp}@example.com"
-        test_password = "TestPassword123!"
-        test_name = f"Test User {timestamp}"
+        # Use the test credentials from the review request
+        test_email = "test@test.com"
+        test_password = "testpass123"
 
-        # Test registration
+        # Test login with provided credentials
         success, response = self.run_test(
-            "User Registration",
-            "POST",
-            "api/auth/register",
-            200,
-            data={
-                "email": test_email,
-                "password": test_password,
-                "name": test_name
-            }
-        )
-        
-        if success and 'token' in response:
-            self.token = response['token']
-            self.user_id = response['user_id']
-            print(f"    Registered user: {test_email}")
-        else:
-            print("    ❌ Registration failed, cannot continue auth tests")
-            return False
-
-        # Test login with same credentials
-        success, response = self.run_test(
-            "User Login",
+            "User Login (Test Credentials)",
             "POST",
             "api/auth/login",
             200,
@@ -133,6 +110,14 @@ class CADFinanceAPITester:
                 "password": test_password
             }
         )
+        
+        if success and 'token' in response:
+            self.token = response['token']
+            self.user_id = response['user_id']
+            print(f"    Logged in user: {test_email}")
+        else:
+            print("    ❌ Login failed with test credentials, cannot continue tests")
+            return False
 
         # Test get current user
         self.run_test("Get Current User", "GET", "api/auth/me", 200)
