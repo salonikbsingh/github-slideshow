@@ -343,7 +343,7 @@ export default function Dashboard() {
         className="finance-card p-6"
       >
         <h3 className="text-lg font-heading font-semibold text-white mb-4">2026 Tax Breakdown</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="p-4 rounded-lg bg-zinc-800/50">
             <p className="text-xs text-zinc-500 mb-1">Federal Tax</p>
             <p className="text-lg font-mono font-bold text-white">{formatCurrency(data.tax_liability.federal)}</p>
@@ -353,12 +353,20 @@ export default function Dashboard() {
             <p className="text-lg font-mono font-bold text-white">{formatCurrency(data.tax_liability.ontario)}</p>
           </div>
           <div className="p-4 rounded-lg bg-zinc-800/50">
+            <p className="text-xs text-zinc-500 mb-1">Ontario Health Premium</p>
+            <p className="text-lg font-mono font-bold text-white">{formatCurrency(data.tax_liability.ontario_health_premium || 0)}</p>
+          </div>
+          <div className="p-4 rounded-lg bg-zinc-800/50">
             <p className="text-xs text-zinc-500 mb-1">CPP (11.9%)</p>
             <p className="text-lg font-mono font-bold text-white">{formatCurrency(data.tax_liability.cpp)}</p>
           </div>
           <div className="p-4 rounded-lg bg-zinc-800/50">
             <p className="text-xs text-zinc-500 mb-1">CPP2 (8%)</p>
             <p className="text-lg font-mono font-bold text-white">{formatCurrency(data.tax_liability.cpp2)}</p>
+          </div>
+          <div className="p-4 rounded-lg bg-zinc-800/50">
+            <p className="text-xs text-zinc-500 mb-1">EI {data.tax_liability.ei_opted_in ? '(Opted In)' : '(Not Opted In)'}</p>
+            <p className="text-lg font-mono font-bold text-white">{formatCurrency(data.tax_liability.ei || 0)}</p>
           </div>
         </div>
       </motion.div>
