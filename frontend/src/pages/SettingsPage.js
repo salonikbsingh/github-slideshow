@@ -263,6 +263,52 @@ If you lose your authenticator, use one of these codes to login.
         </div>
       </motion.section>
 
+      {/* Tax Settings Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.22 }}
+        className="finance-card p-6 space-y-6"
+      >
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-amber-500/20">
+            <Calculator className="w-5 h-5 text-amber-400" />
+          </div>
+          <h2 className="font-heading text-lg font-semibold">Tax Settings (2026)</h2>
+        </div>
+        
+        <div className="space-y-4">
+          {/* EI Opt-in Toggle */}
+          <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-800/50">
+            <div>
+              <p className="font-medium">Employment Insurance (EI)</p>
+              <p className="text-sm text-zinc-500">
+                Optional for self-employed. Rate: 1.63%, Max Premium: $1,123.07
+              </p>
+            </div>
+            <Switch
+              checked={profile?.ei_opt_in || false}
+              onCheckedChange={(checked) => updateProfile('ei_opt_in', checked)}
+              data-testid="ei-opt-in-toggle"
+            />
+          </div>
+          
+          <div className="p-3 rounded-lg bg-zinc-800/30 text-sm text-zinc-400">
+            <p className="mb-2">
+              <strong className="text-zinc-300">Why opt into EI?</strong>
+            </p>
+            <ul className="list-disc list-inside space-y-1 text-xs">
+              <li>Access to maternity/parental benefits</li>
+              <li>Sickness benefits coverage</li>
+              <li>Compassionate care benefits</li>
+            </ul>
+            <p className="mt-2 text-xs text-amber-400">
+              Note: Once you opt in, you must remain enrolled for at least one full year.
+            </p>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Contribution Room Section */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
