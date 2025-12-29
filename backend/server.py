@@ -1152,11 +1152,6 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
             "federal_bpa": TaxEngine.FEDERAL_BPA,
             "ontario_bpa": TaxEngine.ONTARIO_BPA
         },
-            "cpp2": cpp["cpp2"],
-            "total": total_tax,
-            "current_bracket": current_bracket,
-            "basic_personal_amount": TaxEngine.BASIC_PERSONAL_AMOUNT
-        },
         "income_summary": {
             "total_income": total_income,
             "business_income": total_business_income,
