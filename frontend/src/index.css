@@ -76,7 +76,7 @@
     @apply font-heading;
   }
 
-  .font-mono, code, pre {
+  code, pre {
     @apply font-mono;
   }
 }
