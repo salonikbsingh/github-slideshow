@@ -397,26 +397,36 @@ class TaxEngine:
                     return rate
             return "33%"
         
-        current_bracket = get_federal_bracket(current_taxable - cls.BASIC_PERSONAL_AMOUNT)
-        projected_bracket = get_federal_bracket(projected_taxable - cls.BASIC_PERSONAL_AMOUNT)
+        current_bracket = get_federal_bracket(current_taxable - cls.FEDERAL_BPA)
+        projected_bracket = get_federal_bracket(projected_taxable - cls.FEDERAL_BPA)
         bracket_dropped = current_bracket != projected_bracket
         
         # Calculate optimal RRSP to drop a bracket
         bracket_thresholds = [58523, 117045, 181440, 258482]
         optimal_rrsp = 0
         for threshold in bracket_thresholds:
-            if current_taxable - cls.BASIC_PERSONAL_AMOUNT > threshold:
-                excess = (current_taxable - cls.BASIC_PERSONAL_AMOUNT) - threshold
+            if current_taxable - cls.FEDERAL_BPA > threshold:
+                excess = (current_taxable - cls.FEDERAL_BPA) - threshold
                 if excess > 0 and excess < optimal_rrsp or optimal_rrsp == 0:
                     optimal_rrsp = excess + 1  # +1 to cross threshold
+        
+        # Calculate OHP for both scenarios
+        current_ohp = cls.calculate_ontario_health_premium(current_taxable)
+        projected_ohp = cls.calculate_ontario_health_premium(projected_taxable)
+        ohp_savings = current_ohp - projected_ohp
+        
+        # Complete totals including OHP
+        current_complete_total = current_federal + current_ontario + current_ohp + current_cpp["total"]
+        projected_complete_total = projected_federal + projected_ontario + projected_ohp + current_cpp["total"]
         
         return {
             "current": {
                 "taxable_income": current_taxable,
                 "federal_tax": current_federal,
                 "ontario_tax": current_ontario,
+                "ontario_health_premium": current_ohp,
                 "cpp_total": current_cpp["total"],
-                "total_tax": current_total,
+                "total_tax": current_complete_total,
                 "bracket": current_bracket
             },
             "projected": {
@@ -424,15 +434,17 @@ class TaxEngine:
                 "taxable_income": projected_taxable,
                 "federal_tax": projected_federal,
                 "ontario_tax": projected_ontario,
-                "cpp_total": current_cpp["total"],  # CPP unchanged
-                "total_tax": projected_total,
+                "ontario_health_premium": projected_ohp,
+                "cpp_total": current_cpp["total"],  # CPP unchanged by RRSP
+                "total_tax": projected_complete_total,
                 "bracket": projected_bracket
             },
             "savings": {
                 "federal": federal_savings,
                 "ontario": ontario_savings,
-                "total": total_savings,
-                "effective_rate": (total_savings / rrsp_contribution * 100) if rrsp_contribution > 0 else 0
+                "ohp": ohp_savings,
+                "total": federal_savings + ontario_savings + ohp_savings,
+                "effective_rate": ((federal_savings + ontario_savings + ohp_savings) / rrsp_contribution * 100) if rrsp_contribution > 0 else 0
             },
             "bracket_dropped": bracket_dropped,
             "optimal_rrsp_to_drop_bracket": optimal_rrsp,
