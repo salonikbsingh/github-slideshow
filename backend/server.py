@@ -988,6 +988,81 @@ async def export_all_data(user: dict = Depends(get_current_user)):
         headers={"Content-Disposition": f"attachment; filename=cad_finance_backup_{datetime.now().strftime('%Y%m%d')}.csv"}
     )
 
+# =============== TAX PROJECTION CALCULATOR ===============
+
+class TaxProjectionRequest(BaseModel):
+    rrsp_contribution: float = 0
+
+@api_router.post("/tax/projection")
+async def calculate_tax_projection(data: TaxProjectionRequest, user: dict = Depends(get_current_user)):
+    """What-If Tax Projection Calculator - See how RRSP affects your tax bracket"""
+    profile = await db.profiles.find_one({"user_id": user["user_id"]}, {"_id": 0}) or {}
+    
+    # Get current year transactions for income calculation
+    current_year = datetime.now().year
+    transactions = await db.transactions.find(
+        {"user_id": user["user_id"], "date": {"$regex": f"^{current_year}"}},
+        {"_id": 0}
+    ).to_list(10000)
+    
+    total_business_income = sum(t["amount"] for t in transactions if t["type"] == "Income" and t.get("is_business"))
+    total_business_expenses = sum(
+        t["amount"] * (t.get("business_use_percent", 100) / 100)
+        for t in transactions if t["type"] == "Expense" and t.get("is_business")
+    )
+    
+    # Calculate deductions
+    home_sqft = profile.get("home_sqft", 0)
+    office_sqft = profile.get("office_sqft", 0)
+    home_expenses = sum(t["amount"] for t in transactions if t["type"] == "Expense" and t.get("split_with_sister"))
+    home_office_deduction = TaxEngine.calculate_home_office_deduction(home_sqft, office_sqft, home_expenses)
+    
+    opening_ucc = profile.get("opening_ucc", 0)
+    ev_depreciation = TaxEngine.calculate_ev_depreciation(opening_ucc, is_first_year=True) if opening_ucc > 0 else {"depreciation": 0}
+    
+    net_business_income = total_business_income - total_business_expenses
+    adjusted_income = net_business_income - home_office_deduction - ev_depreciation.get("depreciation", 0)
+    
+    # Calculate projection
+    projection = TaxEngine.calculate_tax_projection(adjusted_income, data.rrsp_contribution)
+    
+    return projection
+
+@api_router.get("/tax/brackets")
+async def get_tax_brackets():
+    """Get 2026 Official Tax Bracket Information"""
+    return {
+        "federal": {
+            "brackets": [
+                {"threshold": 58523, "rate": "14%", "cumulative_threshold": 58523},
+                {"threshold": 58522, "rate": "20.5%", "cumulative_threshold": 117045},
+                {"threshold": 64395, "rate": "26%", "cumulative_threshold": 181440},
+                {"threshold": 77042, "rate": "29%", "cumulative_threshold": 258482},
+                {"threshold": "∞", "rate": "33%", "cumulative_threshold": "Above $258,482"}
+            ],
+            "basic_personal_amount": TaxEngine.BASIC_PERSONAL_AMOUNT
+        },
+        "ontario": {
+            "brackets": [
+                {"threshold": 51446, "rate": "5.05%"},
+                {"threshold": 51446, "rate": "9.15%"},
+                {"threshold": 67526, "rate": "11.16%"},
+                {"threshold": 70000, "rate": "12.16%"},
+                {"threshold": "∞", "rate": "13.16%"}
+            ],
+            "basic_personal_amount": 12399
+        },
+        "cpp": {
+            "max_pensionable_earnings": TaxEngine.CPP_MAX_EARNINGS,
+            "exemption": TaxEngine.CPP_EXEMPTION,
+            "rate": "11.9% (self-employed)",
+            "cpp2_threshold": TaxEngine.CPP2_MAX_EARNINGS,
+            "cpp2_rate": "8%"
+        },
+        "rrsp_limit_2026": 31560,
+        "tfsa_limit_2026": 7000
+    }
+
 # =============== ROOT & HEALTH ===============
 
 @api_router.get("/")
