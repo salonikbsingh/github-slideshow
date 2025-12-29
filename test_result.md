@@ -287,13 +287,9 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus:
-    - "Settings Page - EI Opt-in Toggle"
-    - "Settings Page - Contribution Room Inputs"
-    - "Dashboard - Full Tax Breakdown Display"
-    - "Tax Projection - OHP Display"
+  current_focus: []
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
@@ -301,3 +297,5 @@ agent_communication:
     message: "Completed implementation of Ontario tax features. Backend verified via curl - all tax components (Federal, Ontario, OHP, CPP, CPP2, EI) are calculated correctly. Frontend pages updated to display the new fields. Need UI testing for: 1) EI toggle in Settings, 2) Contribution room inputs in Settings and SetupWizard, 3) Full tax breakdown in Dashboard, 4) OHP in Tax Projection page. Test user credentials: email=test@test.com, password=testpass123"
   - agent: "testing"
     message: "✅ BACKEND TESTING COMPLETE: All 2026 Ontario tax implementation features are working correctly. Comprehensive testing performed on: 1) Dashboard Tax Breakdown - all 6 components present and accurate, 2) Tax Projection with user's RRSP room ($85,000) - working correctly with OHP calculations, 3) Profile EI opt-in toggle - verified EI changes from $1123.07 to $0.00 when toggled, 4) Contribution room fields - TFSA/RRSP room values save and persist correctly. All backend APIs are functioning as expected. 57/57 tests passed. Ready for frontend testing."
+  - agent: "testing"
+    message: "✅ FRONTEND TESTING COMPLETE: All 2026 Ontario tax frontend features are working correctly. Comprehensive UI testing performed: 1) Dashboard - All 6 tax cards displayed correctly (Federal, Ontario, OHP, CPP, CPP2, EI with opt-in status), 2) Settings Page - Tax Settings section with Calculator icon, EI toggle with explanatory text, Contribution Room section with PiggyBank icon, TFSA/RRSP input fields, CRA My Account helper text - all present and functional, 3) Tax Projection - RRSP slider uses user's actual room ($85,000), OHP displayed in current/projected sections, OHP Savings card working, calculation functionality verified. Minor: EI toggle has overlay interaction issue but core functionality works. All frontend requirements met successfully."
