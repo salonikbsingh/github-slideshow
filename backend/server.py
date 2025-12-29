@@ -1280,17 +1280,18 @@ async def get_tax_brackets():
                 {"threshold": 77042, "rate": "29%", "cumulative_threshold": 258482},
                 {"threshold": "∞", "rate": "33%", "cumulative_threshold": "Above $258,482"}
             ],
-            "basic_personal_amount": TaxEngine.BASIC_PERSONAL_AMOUNT
+            "basic_personal_amount": TaxEngine.FEDERAL_BPA
         },
         "ontario": {
             "brackets": [
-                {"threshold": 51446, "rate": "5.05%"},
-                {"threshold": 51446, "rate": "9.15%"},
-                {"threshold": 67526, "rate": "11.16%"},
-                {"threshold": 70000, "rate": "12.16%"},
-                {"threshold": "∞", "rate": "13.16%"}
+                {"threshold": 53891, "rate": "5.05%", "cumulative_threshold": 53891},
+                {"threshold": 53894, "rate": "9.15%", "cumulative_threshold": 107785},
+                {"threshold": 42215, "rate": "11.16%", "cumulative_threshold": 150000},
+                {"threshold": 70000, "rate": "12.16%", "cumulative_threshold": 220000},
+                {"threshold": "∞", "rate": "13.16%", "cumulative_threshold": "Above $220,000"}
             ],
-            "basic_personal_amount": 12399
+            "basic_personal_amount": TaxEngine.ONTARIO_BPA,
+            "health_premium": "Sliding scale $0-$900 based on income"
         },
         "cpp": {
             "max_pensionable_earnings": TaxEngine.CPP_MAX_EARNINGS,
@@ -1298,6 +1299,11 @@ async def get_tax_brackets():
             "rate": "11.9% (self-employed)",
             "cpp2_threshold": TaxEngine.CPP2_MAX_EARNINGS,
             "cpp2_rate": "8%"
+        },
+        "ei": {
+            "rate": "1.63% (optional for self-employed)",
+            "max_insurable_earnings": TaxEngine.EI_MAX_INSURABLE,
+            "max_premium": TaxEngine.EI_MAX_PREMIUM
         },
         "rrsp_limit_2026": 31560,
         "tfsa_limit_2026": 7000
