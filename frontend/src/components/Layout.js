@@ -18,7 +18,7 @@ const navItems = [
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-export default function Layout({ children }) {
+export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
