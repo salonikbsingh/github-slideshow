@@ -7,78 +7,82 @@ Build a professional-grade, mobile-responsive CAD Finance & Business Suite for a
 - **Primary User**: Ontario resident freelancer/gig worker (Uber Eats driver)
 - **Secondary Stakeholder**: Sister (for household bill splitting)
 
-## Core Requirements
-1. **Command Center Dashboard**: Net Worth, Tax Liability, Goal Tracker
-2. **Quick-Entry Wizard**: FAB (+) with 3-step wizard for Income, Business Expense, Personal Expense, EV Charge
-3. **Tax Engine**: 2026 Canadian tax compliance with CPP/CPP2, Class 54 EV depreciation
-4. **Sister Module**: Household bill splitting with PDF export (data siloed)
-5. **Security**: TOTP 2FA, JWT auth, Google OAuth
-
-## User Choices
-- Auth: Email/Password + Google Social Login
-- Database: MongoDB
-- 2FA: TOTP-based (Google Authenticator style)
-- PDF: Server-side generation (ReportLab)
-- Theme: Professional dark theme
-
 ## What's Been Implemented (December 29, 2025)
 
 ### Backend (FastAPI + MongoDB)
 - [x] User registration and login with JWT
 - [x] Emergent Google OAuth integration
-- [x] TOTP 2FA setup and verification
+- [x] TOTP 2FA setup with 10 backup codes
 - [x] Profile management with home office, EV details, goals
 - [x] Transaction CRUD with business/personal categorization
 - [x] Mileage log tracking (Business vs Personal)
-- [x] EV Charging sessions with $0.03/kWh rebate
+- [x] EV Charging sessions with Grizzl-E rebate ($0.03/kWh)
 - [x] Sister module with 50/50 bill splitting
-- [x] PDF generation for household expense reports
+- [x] PDF generation with Grizzl-E Energy Credit section
 - [x] CSV export for CRA backup
-- [x] Tax Engine with 2026 rates:
-  - Federal brackets (15%-33%)
-  - Ontario brackets (5.05%-13.16%)
+- [x] **Tax Projection Calculator** (What-If RRSP analysis)
+- [x] Tax Engine with **2026 Official Rates**:
+  - Federal: 14% (first $58,523), 20.5%, 26%, 29%, 33%
+  - Basic Personal Amount: $16,452
+  - Ontario brackets with BPA $12,399
   - CPP 11.9% on first $74,600
   - CPP2 8% on $74,600-$85,000
   - Class 54 EV depreciation (55% on first $61,000)
-  - Home office deduction calculation
+- [x] **Grizzl-E Rebate Logic**:
+  - Net Energy Cost = Gross - Rebate
+  - Business Deduction based on NET cost
+  - Rebate as Personal Credit (not split with sister)
 
 ### Frontend (React + Tailwind + Shadcn)
 - [x] Professional dark theme with emerald accents
 - [x] Mobile-first responsive design
-- [x] Login/Register pages with Google OAuth
-- [x] Setup Wizard (5 steps: Welcome, Home Office, EV, Balances, Goals)
-- [x] Dashboard with:
-  - Net Worth card (Savings + TFSA + RRSP - Debt)
-  - Tax Liability with pie chart
-  - Business Income with deductions
-  - Goal Tracker (Waterfall: Debt → TFSA → RRSP)
-  - Quick stats (Mileage, EV Charging, Income, Expenses)
-- [x] Transactions page with filtering
-- [x] Mileage page with business % calculation
-- [x] EV Charging page with rebate tracking
-- [x] Sister Module with violet accent theme
-- [x] Settings page with 2FA and profile management
-- [x] Quick Entry Wizard via FAB
+- [x] Login/Register with Google OAuth
+- [x] Setup Wizard with **EV $61k cap tooltip**
+- [x] Dashboard with Net Worth, Tax Liability, Goals
+- [x] **Tax Projection Calculator Page**:
+  - RRSP contribution slider
+  - Real-time tax savings calculation
+  - Bracket drop detection
+  - Optimal RRSP suggestion
+  - 2026 brackets reference
+- [x] Transactions, Mileage, EV Charging pages
+- [x] Sister Module with PDF export
+- [x] Settings with **2FA backup codes download**
+
+## 2026 Tax Specifications Implemented
+
+### Federal Brackets
+| Threshold | Rate |
+|-----------|------|
+| First $58,523 | 14% |
+| $58,523 - $117,045 | 20.5% |
+| $117,045 - $181,440 | 26% |
+| $181,440 - $258,482 | 29% |
+| Above $258,482 | 33% |
+
+### Key Limits
+- Basic Personal Amount: $16,452
+- RRSP Limit: $31,560
+- TFSA Limit: $7,000
+- CPP Max Pensionable: $74,600
+- CPP2 Max: $85,000
+- Class 54 CCA Cap: $61,000 + tax
 
 ## Prioritized Backlog
 
 ### P0 (Done)
-- All core features implemented
+- All core features ✓
+- 2026 tax brackets ✓
+- Tax projection calculator ✓
+- Grizzl-E rebate logic ✓
+- 2FA backup codes ✓
 
 ### P1 (Next Sprint)
-- [ ] Edit functionality for transactions, mileage, charging sessions
+- [ ] Edit functionality for transactions/mileage/charging
 - [ ] Monthly income/expense trends chart
-- [ ] Tax projection calculator
-- [ ] Recurring transaction support
+- [ ] Recurring transaction automation
 
 ### P2 (Future)
-- [ ] Receipt image upload and OCR
-- [ ] Bank account integration (Plaid)
-- [ ] Multi-year historical data
-- [ ] Tax form generation (T2125)
-
-## Next Tasks
-1. Add edit functionality for all CRUD entities
-2. Implement monthly trends visualization
-3. Add tax projection "what-if" calculator
-4. Build recurring transaction automation
+- [ ] Receipt image upload with OCR
+- [ ] Bank integration (Plaid)
+- [ ] T2125 form generation
