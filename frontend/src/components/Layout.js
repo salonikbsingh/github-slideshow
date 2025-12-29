@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, Receipt, Car, Zap, Users, Settings, Plus, LogOut, Menu, X,
-  TrendingUp, DollarSign
+  TrendingUp, DollarSign, Calculator
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import QuickEntryWizard from '@/components/QuickEntryWizard';
@@ -15,6 +15,7 @@ const navItems = [
   { path: '/mileage', icon: Car, label: 'Mileage' },
   { path: '/charging', icon: Zap, label: 'EV Charging' },
   { path: '/sister', icon: Users, label: 'Household', accent: 'violet' },
+  { path: '/tax-projection', icon: Calculator, label: 'Tax Calc', accent: 'blue' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 
