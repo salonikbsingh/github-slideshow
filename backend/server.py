@@ -1256,8 +1256,15 @@ async def calculate_tax_projection(data: TaxProjectionRequest, user: dict = Depe
     net_business_income = total_business_income - total_business_expenses
     adjusted_income = net_business_income - home_office_deduction - ev_depreciation.get("depreciation", 0)
     
+    # Get user's actual contribution room (cumulative)
+    rrsp_contribution_room = profile.get("rrsp_contribution_room", 31560)
+    
     # Calculate projection
     projection = TaxEngine.calculate_tax_projection(adjusted_income, data.rrsp_contribution)
+    
+    # Override the default RRSP limit with user's actual contribution room
+    projection["rrsp_limit_2026"] = rrsp_contribution_room
+    projection["rrsp_contribution_room"] = rrsp_contribution_room
     
     return projection
 
