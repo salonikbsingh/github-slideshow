@@ -1,6 +1,6 @@
 {
-  "total_tests": 26,
-  "passed_tests": 26,
+  "total_tests": 39,
+  "passed_tests": 39,
   "failed_tests": 0,
   "success_rate": 100.0,
   "test_results": [
@@ -8,157 +8,235 @@
       "test": "Root API Endpoint",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.028010"
+      "timestamp": "2025-12-29T04:14:13.725179"
     },
     {
       "test": "Health Check",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.063955"
+      "timestamp": "2025-12-29T04:14:13.762772"
+    },
+    {
+      "test": "Get 2026 Tax Brackets",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:13.795193"
+    },
+    {
+      "test": "2026 First Tax Bracket",
+      "success": true,
+      "details": "14% on first $58,523 confirmed",
+      "timestamp": "2025-12-29T04:14:13.795889"
+    },
+    {
+      "test": "2026 Basic Personal Amount",
+      "success": true,
+      "details": "BPA: $16,452",
+      "timestamp": "2025-12-29T04:14:13.795916"
     },
     {
       "test": "User Registration",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.372982"
+      "timestamp": "2025-12-29T04:14:14.055732"
     },
     {
       "test": "User Login",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.672296"
+      "timestamp": "2025-12-29T04:14:14.353426"
     },
     {
       "test": "Get Current User",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.710637"
+      "timestamp": "2025-12-29T04:14:14.392215"
     },
     {
       "test": "Create Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.754305"
+      "timestamp": "2025-12-29T04:14:14.431409"
     },
     {
       "test": "Get Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.795039"
+      "timestamp": "2025-12-29T04:14:14.470427"
     },
     {
       "test": "Update Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:05.843440"
+      "timestamp": "2025-12-29T04:14:14.505396"
     },
     {
       "test": "Get Dashboard Data",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.093532"
+      "timestamp": "2025-12-29T04:14:14.596964"
     },
     {
       "test": "Dashboard Structure",
       "success": true,
       "details": "All required fields present",
-      "timestamp": "2025-12-29T03:43:06.094136"
+      "timestamp": "2025-12-29T04:14:14.597596"
     },
     {
       "test": "Create Transaction",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.131553"
+      "timestamp": "2025-12-29T04:14:14.632256"
     },
     {
       "test": "Get Transactions",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.170228"
+      "timestamp": "2025-12-29T04:14:14.670361"
     },
     {
       "test": "Delete Transaction",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.207609"
+      "timestamp": "2025-12-29T04:14:14.703842"
     },
     {
       "test": "Create Mileage Log",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.251533"
+      "timestamp": "2025-12-29T04:14:14.740854"
     },
     {
       "test": "Get Mileage Logs",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.287884"
+      "timestamp": "2025-12-29T04:14:14.779647"
     },
     {
       "test": "Delete Mileage Log",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.323253"
+      "timestamp": "2025-12-29T04:14:14.815341"
     },
     {
       "test": "Create Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.358128"
+      "timestamp": "2025-12-29T04:14:14.850627"
     },
     {
       "test": "EV Rebate Calculation",
       "success": true,
       "details": "Rebate: $1.36",
-      "timestamp": "2025-12-29T03:43:06.358606"
+      "timestamp": "2025-12-29T04:14:14.851243"
     },
     {
       "test": "Get Charging Sessions",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.395990"
+      "timestamp": "2025-12-29T04:14:14.885229"
     },
     {
       "test": "Delete Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.430597"
+      "timestamp": "2025-12-29T04:14:14.923884"
     },
     {
       "test": "Create Sister Bill",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.464973"
+      "timestamp": "2025-12-29T04:14:14.959805"
     },
     {
       "test": "Bill Split Calculation",
       "success": true,
       "details": "Split: $100.00",
-      "timestamp": "2025-12-29T03:43:06.465435"
+      "timestamp": "2025-12-29T04:14:14.960417"
     },
     {
       "test": "Get Sister Bills",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.502086"
+      "timestamp": "2025-12-29T04:14:14.995251"
     },
     {
       "test": "Get Sister Summary",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.582675"
+      "timestamp": "2025-12-29T04:14:15.038743"
     },
     {
       "test": "Delete Sister Bill",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:43:06.619573"
+      "timestamp": "2025-12-29T04:14:15.075115"
     },
     {
       "test": "CSV Export",
       "success": true,
       "details": "CSV file generated successfully",
-      "timestamp": "2025-12-29T03:43:06.657874"
+      "timestamp": "2025-12-29T04:14:15.161407"
+    },
+    {
+      "test": "TOTP Setup",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:17.480602"
+    },
+    {
+      "test": "TOTP Backup Codes",
+      "success": true,
+      "details": "Generated 10 backup codes",
+      "timestamp": "2025-12-29T04:14:17.481254"
+    },
+    {
+      "test": "Create Charging Session (Grizzl-E)",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:17.513680"
+    },
+    {
+      "test": "Grizzl-E Rebate Calculation",
+      "success": true,
+      "details": "Rebate: $3.00",
+      "timestamp": "2025-12-29T04:14:17.514267"
+    },
+    {
+      "test": "Dashboard Grizzl-E Data",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:17.550231"
+    },
+    {
+      "test": "Dashboard Grizzl-E Rebate",
+      "success": true,
+      "details": "Rebate shown: $0.00",
+      "timestamp": "2025-12-29T04:14:17.550825"
+    },
+    {
+      "test": "Delete Test Charging Session",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:17.583952"
+    },
+    {
+      "test": "Create Charging for PDF Test",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:17.617877"
+    },
+    {
+      "test": "Sister PDF Generation",
+      "success": true,
+      "details": "PDF generated successfully",
+      "timestamp": "2025-12-29T04:14:17.657942"
+    },
+    {
+      "test": "Delete PDF Test Charging Session",
+      "success": true,
+      "details": "Status: 200 (expected 200)",
+      "timestamp": "2025-12-29T04:14:17.694070"
     }
   ]
 }
