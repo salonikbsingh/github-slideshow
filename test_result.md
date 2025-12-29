@@ -150,11 +150,14 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "EI opt-in working - returns $1,102.29 when ei_opt_in=true"
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: EI opt-in functionality working perfectly. Test user has ei_opt_in=true and shows EI Premium $1102.29. Toggle test confirmed: EI changes from $1123.07 to $0.00 when toggled off, and dashboard reflects changes immediately. Profile saves EI opt-in preference correctly."
 
   - task: "Cumulative TFSA/RRSP Contribution Room"
     implemented: true
