@@ -37,9 +37,12 @@ export default function SetupWizard() {
     total_savings: '',
     tfsa_balance: '',
     rrsp_balance: '',
+    tfsa_contribution_room: '',
+    rrsp_contribution_room: '',
     tfsa_goal: '7000',
     rrsp_goal: '31560',
     debt_goal: '',
+    ei_opt_in: false,
   });
 
   const updateField = (field, value) => {
