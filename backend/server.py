@@ -1079,12 +1079,11 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
     # Adjust net income with Grizzl-E logic
     adjusted_net_income = net_business_income - home_office_deduction - ev_depreciation.get("depreciation", 0)
     
-    # Tax calculations
-    federal_tax = TaxEngine.calculate_federal_tax(adjusted_net_income)
-    ontario_tax = TaxEngine.calculate_ontario_tax(adjusted_net_income)
-    cpp = TaxEngine.calculate_cpp(adjusted_net_income)
+    # Get EI opt-in preference
+    ei_opt_in = profile.get("ei_opt_in", False)
     
-    total_tax = federal_tax + ontario_tax + cpp["total"]
+    # Complete tax calculations using new calculate_total_tax
+    tax_breakdown = TaxEngine.calculate_total_tax(adjusted_net_income, ei_opt_in)
     
     # Net worth
     total_savings = profile.get("total_savings", 0)
@@ -1108,7 +1107,7 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
     
     # Get current federal bracket
     def get_current_bracket(income):
-        bpa = TaxEngine.BASIC_PERSONAL_AMOUNT
+        bpa = TaxEngine.FEDERAL_BPA
         taxable = income - bpa
         if taxable <= 58523: return "14%"
         elif taxable <= 117045: return "20.5%"
@@ -1116,7 +1115,18 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
         elif taxable <= 258482: return "29%"
         else: return "33%"
     
-    current_bracket = get_current_bracket(adjusted_net_income)
+    # Get current Ontario bracket  
+    def get_ontario_bracket(income):
+        bpa = TaxEngine.ONTARIO_BPA
+        taxable = income - bpa
+        if taxable <= 53891: return "5.05%"
+        elif taxable <= 107785: return "9.15%"
+        elif taxable <= 150000: return "11.16%"
+        elif taxable <= 220000: return "12.16%"
+        else: return "13.16%"
+    
+    current_federal_bracket = get_current_bracket(adjusted_net_income)
+    current_ontario_bracket = get_ontario_bracket(adjusted_net_income)
     
     return {
         "net_worth": net_worth,
@@ -1125,9 +1135,19 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
         "tfsa_balance": tfsa_balance,
         "rrsp_balance": rrsp_balance,
         "tax_liability": {
-            "federal": federal_tax,
-            "ontario": ontario_tax,
-            "cpp": cpp["cpp"],
+            "federal": tax_breakdown["federal"],
+            "ontario": tax_breakdown["ontario"],
+            "ontario_health_premium": tax_breakdown["ontario_health_premium"],
+            "cpp": tax_breakdown["cpp"],
+            "cpp2": tax_breakdown["cpp2"],
+            "ei": tax_breakdown["ei"],
+            "ei_opted_in": tax_breakdown["ei_opted_in"],
+            "total": tax_breakdown["total"],
+            "federal_bracket": current_federal_bracket,
+            "ontario_bracket": current_ontario_bracket,
+            "federal_bpa": TaxEngine.FEDERAL_BPA,
+            "ontario_bpa": TaxEngine.ONTARIO_BPA
+        },
             "cpp2": cpp["cpp2"],
             "total": total_tax,
             "current_bracket": current_bracket,
