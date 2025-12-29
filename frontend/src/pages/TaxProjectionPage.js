@@ -182,6 +182,10 @@ export default function TaxProjectionPage() {
                 <span className="font-mono">{formatCurrency(projection.current.ontario_tax)}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-zinc-500">Ontario Health Premium</span>
+                <span className="font-mono">{formatCurrency(projection.current.ontario_health_premium || 0)}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-zinc-500">CPP/CPP2</span>
                 <span className="font-mono">{formatCurrency(projection.current.cpp_total)}</span>
               </div>
