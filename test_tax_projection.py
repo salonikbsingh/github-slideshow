@@ -3,7 +3,7 @@ import requests
 import json
 
 # Test tax projection with auth
-base_url = 'https://wealthflow-18.preview.emergentagent.com'
+base_url = 'https://finance-suite-10.preview.emergentagent.com'
 
 # First register a user
 auth_data = {

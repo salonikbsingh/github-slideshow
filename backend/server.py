@@ -1322,7 +1322,7 @@ else:
     # Default allowed origins for development and production
     origins = [
         "http://localhost:3000",
-        "https://wealthflow-18.preview.emergentagent.com"
+        "https://finance-suite-10.preview.emergentagent.com"
     ]
 
 app.add_middleware(
