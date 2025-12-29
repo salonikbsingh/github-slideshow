@@ -135,11 +135,14 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "OHP sliding scale implemented and verified - returns $600 for test income"
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: OHP calculation working correctly. Dashboard shows $600.00 OHP. Tax projection shows current OHP $600.00, projected OHP $450.00 with $20k RRSP contribution, OHP savings $150.00. All OHP functionality confirmed working."
 
   - task: "EI Premium Calculation (Optional)"
     implemented: true
