@@ -284,29 +284,59 @@ export default function SetupWizard() {
                     data-testid="input-debt"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="tfsa_balance">TFSA Balance (CAD)</Label>
-                  <Input
-                    id="tfsa_balance"
-                    type="number"
-                    placeholder="0.00"
-                    value={formData.tfsa_balance}
-                    onChange={(e) => updateField('tfsa_balance', e.target.value)}
-                    className="finance-input"
-                    data-testid="input-tfsa"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="tfsa_balance">TFSA Balance (CAD)</Label>
+                    <Input
+                      id="tfsa_balance"
+                      type="number"
+                      placeholder="0.00"
+                      value={formData.tfsa_balance}
+                      onChange={(e) => updateField('tfsa_balance', e.target.value)}
+                      className="finance-input"
+                      data-testid="input-tfsa"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tfsa_contribution_room">TFSA Room Available</Label>
+                    <Input
+                      id="tfsa_contribution_room"
+                      type="number"
+                      placeholder="e.g., 95000"
+                      value={formData.tfsa_contribution_room}
+                      onChange={(e) => updateField('tfsa_contribution_room', e.target.value)}
+                      className="finance-input"
+                      data-testid="input-tfsa-room"
+                    />
+                    <p className="text-xs text-zinc-500">Includes unused room from previous years</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rrsp_balance">RRSP Balance (CAD)</Label>
-                  <Input
-                    id="rrsp_balance"
-                    type="number"
-                    placeholder="0.00"
-                    value={formData.rrsp_balance}
-                    onChange={(e) => updateField('rrsp_balance', e.target.value)}
-                    className="finance-input"
-                    data-testid="input-rrsp"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rrsp_balance">RRSP Balance (CAD)</Label>
+                    <Input
+                      id="rrsp_balance"
+                      type="number"
+                      placeholder="0.00"
+                      value={formData.rrsp_balance}
+                      onChange={(e) => updateField('rrsp_balance', e.target.value)}
+                      className="finance-input"
+                      data-testid="input-rrsp"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rrsp_contribution_room">RRSP Room Available</Label>
+                    <Input
+                      id="rrsp_contribution_room"
+                      type="number"
+                      placeholder="e.g., 50000"
+                      value={formData.rrsp_contribution_room}
+                      onChange={(e) => updateField('rrsp_contribution_room', e.target.value)}
+                      className="finance-input"
+                      data-testid="input-rrsp-room"
+                    />
+                    <p className="text-xs text-zinc-500">Check CRA My Account for exact amount</p>
+                  </div>
                 </div>
                 {formData.total_savings && formData.total_debt && (
                   <div className="p-3 rounded-lg bg-zinc-800">
