@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { 
   User, Shield, Download, Settings, Home, Car, Target,
-  Check, X, QrCode
+  Check, X, QrCode, PiggyBank, Calculator
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -259,6 +259,54 @@ If you lose your authenticator, use one of these codes to login.
               className="finance-input"
               data-testid="setting-ucc"
             />
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Contribution Room Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="finance-card p-6 space-y-6"
+      >
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-emerald-500/20">
+            <PiggyBank className="w-5 h-5 text-emerald-400" />
+          </div>
+          <h2 className="font-heading text-lg font-semibold">Contribution Room</h2>
+        </div>
+        
+        <p className="text-sm text-zinc-400">
+          Enter your total available contribution room (includes unused room from previous years).
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="tfsa_contribution_room">TFSA Contribution Room (CAD)</Label>
+            <Input
+              id="tfsa_contribution_room"
+              type="number"
+              value={profile?.tfsa_contribution_room || ''}
+              onChange={(e) => updateProfile('tfsa_contribution_room', parseFloat(e.target.value) || 0)}
+              className="finance-input"
+              placeholder="e.g., 95000"
+              data-testid="setting-tfsa-room"
+            />
+            <p className="text-xs text-zinc-500">2026 annual limit: $7,000 + any unused room from previous years</p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="rrsp_contribution_room">RRSP Contribution Room (CAD)</Label>
+            <Input
+              id="rrsp_contribution_room"
+              type="number"
+              value={profile?.rrsp_contribution_room || ''}
+              onChange={(e) => updateProfile('rrsp_contribution_room', parseFloat(e.target.value) || 0)}
+              className="finance-input"
+              placeholder="e.g., 50000"
+              data-testid="setting-rrsp-room"
+            />
+            <p className="text-xs text-zinc-500">Check your CRA My Account for exact amount</p>
           </div>
         </div>
       </motion.section>
