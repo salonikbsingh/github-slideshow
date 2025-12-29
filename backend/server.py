@@ -850,10 +850,21 @@ async def health():
 # Include router
 app.include_router(api_router)
 
+# CORS configuration - must specify origins when credentials are allowed
+cors_origins = os.environ.get('CORS_ORIGINS', '')
+if cors_origins and cors_origins != '*':
+    origins = [o.strip() for o in cors_origins.split(',') if o.strip()]
+else:
+    # Default allowed origins for development and production
+    origins = [
+        "http://localhost:3000",
+        "https://wealthflow-18.preview.emergentagent.com"
+    ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
