@@ -113,7 +113,7 @@ export default function TaxProjectionPage() {
             <Slider
               value={[rrspContribution]}
               onValueChange={handleSliderChange}
-              max={brackets?.rrsp_limit_2026 || 31560}
+              max={projection?.rrsp_contribution_room || brackets?.rrsp_limit_2026 || 31560}
               step={100}
               className="w-full"
               data-testid="rrsp-slider"
@@ -121,7 +121,7 @@ export default function TaxProjectionPage() {
             
             <div className="flex justify-between text-xs text-zinc-500">
               <span>$0</span>
-              <span>2026 Limit: {formatCurrency(brackets?.rrsp_limit_2026 || 31560)}</span>
+              <span>Your RRSP Room: {formatCurrency(projection?.rrsp_contribution_room || brackets?.rrsp_limit_2026 || 31560)}</span>
             </div>
           </div>
 
