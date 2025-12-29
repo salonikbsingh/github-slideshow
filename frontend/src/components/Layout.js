@@ -239,6 +239,3 @@ export default function Layout({ children }) {
     </div>
   );
 }
-
-// Import Dashboard for fallback
-import Dashboard from '@/pages/Dashboard';
