@@ -57,6 +57,12 @@ export const dashboardAPI = {
   get: () => api.get('/dashboard'),
 };
 
+// Tax Projection API
+export const taxAPI = {
+  getProjection: (rrspContribution) => api.post('/tax/projection', { rrsp_contribution: rrspContribution }),
+  getBrackets: () => api.get('/tax/brackets'),
+};
+
 // Transactions API
 export const transactionsAPI = {
   getAll: (limit = 100, skip = 0) => api.get(`/transactions?limit=${limit}&skip=${skip}`),
