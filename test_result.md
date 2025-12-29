@@ -101,3 +101,171 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "CAD Finance & Business Suite - Complete 2026 Ontario tax calculations with EI opt-in, cumulative TFSA/RRSP contribution room tracking, and updated dashboard/tax projection pages"
+
+backend:
+  - task: "2026 Federal Tax Calculation"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Federal tax with 2026 brackets and BPA verified - returns $7,164.22 for $80k income"
+
+  - task: "2026 Ontario Tax Calculation"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Ontario tax with 2026 brackets and BPA verified - returns $2,789.66"
+
+  - task: "Ontario Health Premium (OHP)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "OHP sliding scale implemented and verified - returns $600 for test income"
+
+  - task: "EI Premium Calculation (Optional)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "EI opt-in working - returns $1,102.29 when ei_opt_in=true"
+
+  - task: "Cumulative TFSA/RRSP Contribution Room"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Profile schema updated with tfsa_contribution_room and rrsp_contribution_room fields. Tax projection uses user's actual room (85000) instead of default limit"
+
+  - task: "Dashboard API Complete Tax Breakdown"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Dashboard returns all tax components: federal, ontario, ohp, cpp, cpp2, ei, ei_opted_in"
+
+frontend:
+  - task: "Settings Page - EI Opt-in Toggle"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/SettingsPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Tax Settings section with EI opt-in Switch toggle and explanatory text"
+
+  - task: "Settings Page - Contribution Room Inputs"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/SettingsPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Contribution Room section with TFSA and RRSP room inputs"
+
+  - task: "Setup Wizard - Contribution Room Inputs"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/SetupWizard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated step 4 (Balances) to include TFSA and RRSP contribution room inputs"
+
+  - task: "Dashboard - Full Tax Breakdown Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated to show all 6 tax components: Federal, Ontario, OHP, CPP, CPP2, EI"
+
+  - task: "Tax Projection - OHP Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/TaxProjectionPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated to show OHP in current/projected breakdown and savings section"
+
+  - task: "Tax Projection - Dynamic RRSP Room"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/TaxProjectionPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Slider max now uses user's actual contribution room from profile"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Settings Page - EI Opt-in Toggle"
+    - "Settings Page - Contribution Room Inputs"
+    - "Dashboard - Full Tax Breakdown Display"
+    - "Tax Projection - OHP Display"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Completed implementation of Ontario tax features. Backend verified via curl - all tax components (Federal, Ontario, OHP, CPP, CPP2, EI) are calculated correctly. Frontend pages updated to display the new fields. Need UI testing for: 1) EI toggle in Settings, 2) Contribution room inputs in Settings and SetupWizard, 3) Full tax breakdown in Dashboard, 4) OHP in Tax Projection page. Test user credentials: email=test@test.com, password=testpass123"
