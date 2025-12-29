@@ -65,12 +65,36 @@ export default function SettingsPage() {
     try {
       await authAPI.verifyTOTPSetup(totpCode);
       toast.success('2FA enabled successfully!');
-      setTotpSetup(null);
       setTotpCode('');
       await refreshUser();
+      // Keep totpSetup to show backup codes
     } catch (error) {
       toast.error('Invalid code. Please try again.');
     }
+  };
+
+  const handleDownloadBackupCodes = () => {
+    if (!totpSetup?.backup_codes) return;
+    const content = `CAD Finance Suite - 2FA Backup Codes
+Generated: ${new Date().toISOString()}
+Email: ${user?.email}
+
+IMPORTANT: Store these codes securely. Each code can only be used once.
+
+${totpSetup.backup_codes.map((code, i) => `${i + 1}. ${code}`).join('\n')}
+
+If you lose your authenticator, use one of these codes to login.
+`;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cad_finance_backup_codes.txt';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    toast.success('Backup codes downloaded!');
   };
 
   const handleDisableTOTP = async () => {
