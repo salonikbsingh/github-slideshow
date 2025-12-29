@@ -839,9 +839,30 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
     
     # EV Depreciation
     opening_ucc = profile.get("opening_ucc", 0)
-    ev_depreciation = TaxEngine.calculate_ev_depreciation(opening_ucc, is_first_year=True) if opening_ucc > 0 else {"depreciation": 0}
+    ev_purchase_price = profile.get("ev_purchase_price", 0)
+    ev_depreciation = TaxEngine.calculate_ev_depreciation(opening_ucc, is_first_year=True) if opening_ucc > 0 else {"depreciation": 0, "cca_capped": False}
     
-    # Adjust net income
+    # Charging summary with Grizzl-E rebate logic
+    charging_sessions = await db.charging_sessions.find(
+        {"user_id": user["user_id"], "date": {"$regex": f"^{current_year}"}},
+        {"_id": 0}
+    ).to_list(10000)
+    total_kwh = sum(s["kwh"] for s in charging_sessions)
+    total_charging_cost = sum(s["cost"] for s in charging_sessions)
+    
+    # Calculate Grizzl-E energy cost breakdown
+    avg_utility_rate = (total_charging_cost / total_kwh) if total_kwh > 0 else 0.15
+    business_use_percent = profile.get("business_use_percent", 100)
+    grizzle_breakdown = TaxEngine.calculate_grizzle_energy_cost(
+        total_kwh, avg_utility_rate, business_use_percent
+    )
+    
+    # Adjust business expenses to use NET energy cost (after Grizzl-E rebate)
+    adjusted_business_expenses = total_business_expenses
+    # Add net deductible charging cost to business expenses
+    adjusted_business_expenses += grizzle_breakdown["net_deductible_amount"]
+    
+    # Adjust net income with Grizzl-E logic
     adjusted_net_income = net_business_income - home_office_deduction - ev_depreciation.get("depreciation", 0)
     
     # Tax calculations
@@ -871,14 +892,17 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
     total_business_km = sum(l["distance"] for l in mileage_logs if l["purpose"] == "Business")
     total_personal_km = sum(l["distance"] for l in mileage_logs if l["purpose"] == "Personal")
     
-    # Charging summary
-    charging_sessions = await db.charging_sessions.find(
-        {"user_id": user["user_id"], "date": {"$regex": f"^{current_year}"}},
-        {"_id": 0}
-    ).to_list(10000)
-    total_kwh = sum(s["kwh"] for s in charging_sessions)
-    total_rebate = sum(s["rebate_earned"] for s in charging_sessions)
-    total_charging_cost = sum(s["cost"] for s in charging_sessions)
+    # Get current federal bracket
+    def get_current_bracket(income):
+        bpa = TaxEngine.BASIC_PERSONAL_AMOUNT
+        taxable = income - bpa
+        if taxable <= 58523: return "14%"
+        elif taxable <= 117045: return "20.5%"
+        elif taxable <= 181440: return "26%"
+        elif taxable <= 258482: return "29%"
+        else: return "33%"
+    
+    current_bracket = get_current_bracket(adjusted_net_income)
     
     return {
         "net_worth": net_worth,
@@ -891,7 +915,9 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
             "ontario": ontario_tax,
             "cpp": cpp["cpp"],
             "cpp2": cpp["cpp2"],
-            "total": total_tax
+            "total": total_tax,
+            "current_bracket": current_bracket,
+            "basic_personal_amount": TaxEngine.BASIC_PERSONAL_AMOUNT
         },
         "income_summary": {
             "total_income": total_income,
@@ -900,7 +926,8 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
             "business_expenses": total_business_expenses,
             "net_business_income": net_business_income,
             "home_office_deduction": home_office_deduction,
-            "ev_depreciation": ev_depreciation.get("depreciation", 0)
+            "ev_depreciation": ev_depreciation.get("depreciation", 0),
+            "ev_cca_capped": ev_depreciation.get("cca_capped", False)
         },
         "goals": {
             "debt": {"current": total_debt, "target": debt_goal, "progress": ((debt_goal - total_debt) / debt_goal * 100) if debt_goal > 0 else 100},
@@ -914,8 +941,11 @@ async def get_dashboard(user: dict = Depends(get_current_user)):
         },
         "charging": {
             "total_kwh": total_kwh,
-            "total_cost": total_charging_cost,
-            "total_rebate": total_rebate
+            "gross_cost": grizzle_breakdown["gross_utility_expense"],
+            "grizzle_rebate": grizzle_breakdown["grizzle_cashback"],
+            "net_cost": grizzle_breakdown["net_energy_cost"],
+            "net_deductible": grizzle_breakdown["net_deductible_amount"],
+            "revenue_offset": grizzle_breakdown["revenue_offset"]
         },
         "profile": profile
     }
