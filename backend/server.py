@@ -70,6 +70,8 @@ class ProfileCreate(BaseModel):
     tfsa_goal: float = 7000
     rrsp_goal: float = 31560
     debt_goal: float = 0
+    business_use_percent: float = 100  # Default business use % for EV
+    ei_opt_in: bool = False  # EI is optional for self-employed
 
 class TransactionCreate(BaseModel):
     date: str
