@@ -147,18 +147,19 @@ async def get_current_user(request: Request):
     
     raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-# =============== TAX CALCULATION ENGINE ===============
+# =============== TAX CALCULATION ENGINE (2026 Official Specifications) ===============
 
 class TaxEngine:
-    # 2026 Ontario Tax Rates
+    # 2026 OFFICIAL Federal Tax Brackets
     FEDERAL_BRACKETS = [
-        (55867, 0.15),
-        (55866, 0.205),
-        (61942, 0.26),
-        (69648, 0.29),
-        (float('inf'), 0.33)
+        (58523, 0.14),      # Rate 1: 14% on first $58,523
+        (58522, 0.205),     # Rate 2: 20.5% on $58,523 to $117,045
+        (64395, 0.26),      # Rate 3: 26% on $117,045 to $181,440
+        (77042, 0.29),      # Rate 4: 29% on $181,440 to $258,482
+        (float('inf'), 0.33) # Rate 5: 33% on income over $258,482
     ]
     
+    # 2026 Ontario Tax Brackets
     ONTARIO_BRACKETS = [
         (51446, 0.0505),
         (51446, 0.0915),
@@ -166,6 +167,9 @@ class TaxEngine:
         (70000, 0.1216),
         (float('inf'), 0.1316)
     ]
+    
+    # 2026 Basic Personal Amount
+    BASIC_PERSONAL_AMOUNT = 16452
     
     # 2026 CPP/CPP2 rates
     CPP_MAX_EARNINGS = 74600
@@ -178,10 +182,15 @@ class TaxEngine:
     EV_CLASS_54_RATE = 0.55
     EV_CLASS_54_LIMIT = 61000
     
+    # Grizzl-E Club Rebate
+    GRIZZLE_REBATE_PER_KWH = 0.03
+    
     @classmethod
     def calculate_federal_tax(cls, income: float) -> float:
+        # Apply Basic Personal Amount
+        taxable_income = max(0, income - cls.BASIC_PERSONAL_AMOUNT)
         tax = 0
-        remaining = income
+        remaining = taxable_income
         for bracket_size, rate in cls.FEDERAL_BRACKETS:
             if remaining <= 0:
                 break
@@ -192,8 +201,11 @@ class TaxEngine:
     
     @classmethod
     def calculate_ontario_tax(cls, income: float) -> float:
+        # Ontario also has a basic personal amount (~$12,399 for 2026)
+        ontario_bpa = 12399
+        taxable_income = max(0, income - ontario_bpa)
         tax = 0
-        remaining = income
+        remaining = taxable_income
         for bracket_size, rate in cls.ONTARIO_BRACKETS:
             if remaining <= 0:
                 break
@@ -204,7 +216,7 @@ class TaxEngine:
     
     @classmethod
     def calculate_cpp(cls, net_income: float) -> dict:
-        # CPP on first $74,600
+        # CPP on first $74,600 (minus $3,500 exemption)
         cpp_pensionable = max(0, min(net_income, cls.CPP_MAX_EARNINGS) - cls.CPP_EXEMPTION)
         cpp = cpp_pensionable * cls.CPP_RATE
         
@@ -217,14 +229,18 @@ class TaxEngine:
     @classmethod
     def calculate_ev_depreciation(cls, ucc: float, is_first_year: bool = False) -> dict:
         # Apply half-year rule in first year
-        applicable_ucc = min(ucc, cls.EV_CLASS_54_LIMIT * 1.13)  # Including 13% HST
+        # Cap at $61,000 + 13% HST = $68,930
+        applicable_ucc = min(ucc, cls.EV_CLASS_54_LIMIT * 1.13)
         rate = cls.EV_CLASS_54_RATE
         if is_first_year:
             rate = rate / 2  # Half-year rule
         depreciation = applicable_ucc * rate
+        cca_capped = ucc > cls.EV_CLASS_54_LIMIT
         return {
             "depreciation": depreciation,
-            "ending_ucc": ucc - depreciation
+            "ending_ucc": ucc - depreciation,
+            "cca_capped": cca_capped,
+            "cap_limit": cls.EV_CLASS_54_LIMIT
         }
     
     @classmethod
@@ -233,6 +249,111 @@ class TaxEngine:
             return 0
         ratio = office_sqft / home_sqft
         return total_expenses * ratio
+    
+    @classmethod
+    def calculate_grizzle_energy_cost(cls, total_kwh: float, utility_rate: float, business_use_percent: float = 100) -> dict:
+        """
+        Grizzl-E Club Rebate Logic for EV charging
+        - Rebate: $0.03/kWh cashback
+        - Net cost used for business deduction
+        - Rebate tracked as Revenue Offset (personal credit, not split with sister)
+        """
+        gross_cost = total_kwh * utility_rate
+        grizzle_rebate = total_kwh * cls.GRIZZLE_REBATE_PER_KWH
+        net_cost = gross_cost - grizzle_rebate
+        
+        # Business deduction is based on NET cost × business use %
+        business_deduction = net_cost * (business_use_percent / 100)
+        
+        return {
+            "gross_utility_expense": gross_cost,
+            "grizzle_cashback": grizzle_rebate,
+            "net_energy_cost": net_cost,
+            "business_use_percent": business_use_percent,
+            "net_deductible_amount": business_deduction,  # For T2125
+            "revenue_offset": grizzle_rebate  # Personal credit, not split
+        }
+    
+    @classmethod
+    def calculate_tax_projection(cls, current_income: float, rrsp_contribution: float = 0) -> dict:
+        """
+        What-If Tax Projection Calculator
+        Shows how RRSP contributions affect tax liability and brackets
+        """
+        # Current tax without RRSP
+        current_taxable = current_income
+        current_federal = cls.calculate_federal_tax(current_taxable)
+        current_ontario = cls.calculate_ontario_tax(current_taxable)
+        current_cpp = cls.calculate_cpp(current_taxable)
+        current_total = current_federal + current_ontario + current_cpp["total"]
+        
+        # Projected tax with RRSP contribution
+        projected_taxable = max(0, current_income - rrsp_contribution)
+        projected_federal = cls.calculate_federal_tax(projected_taxable)
+        projected_ontario = cls.calculate_ontario_tax(projected_taxable)
+        projected_cpp = cls.calculate_cpp(projected_taxable)  # CPP not reduced by RRSP
+        projected_total = projected_federal + projected_ontario + current_cpp["total"]  # CPP same
+        
+        # Tax savings
+        federal_savings = current_federal - projected_federal
+        ontario_savings = current_ontario - projected_ontario
+        total_savings = federal_savings + ontario_savings
+        
+        # Determine current and projected brackets
+        def get_federal_bracket(income):
+            brackets = [
+                (58523, "14%"),
+                (117045, "20.5%"),
+                (181440, "26%"),
+                (258482, "29%"),
+                (float('inf'), "33%")
+            ]
+            for threshold, rate in brackets:
+                if income <= threshold:
+                    return rate
+            return "33%"
+        
+        current_bracket = get_federal_bracket(current_taxable - cls.BASIC_PERSONAL_AMOUNT)
+        projected_bracket = get_federal_bracket(projected_taxable - cls.BASIC_PERSONAL_AMOUNT)
+        bracket_dropped = current_bracket != projected_bracket
+        
+        # Calculate optimal RRSP to drop a bracket
+        bracket_thresholds = [58523, 117045, 181440, 258482]
+        optimal_rrsp = 0
+        for threshold in bracket_thresholds:
+            if current_taxable - cls.BASIC_PERSONAL_AMOUNT > threshold:
+                excess = (current_taxable - cls.BASIC_PERSONAL_AMOUNT) - threshold
+                if excess > 0 and excess < optimal_rrsp or optimal_rrsp == 0:
+                    optimal_rrsp = excess + 1  # +1 to cross threshold
+        
+        return {
+            "current": {
+                "taxable_income": current_taxable,
+                "federal_tax": current_federal,
+                "ontario_tax": current_ontario,
+                "cpp_total": current_cpp["total"],
+                "total_tax": current_total,
+                "bracket": current_bracket
+            },
+            "projected": {
+                "rrsp_contribution": rrsp_contribution,
+                "taxable_income": projected_taxable,
+                "federal_tax": projected_federal,
+                "ontario_tax": projected_ontario,
+                "cpp_total": current_cpp["total"],  # CPP unchanged
+                "total_tax": projected_total,
+                "bracket": projected_bracket
+            },
+            "savings": {
+                "federal": federal_savings,
+                "ontario": ontario_savings,
+                "total": total_savings,
+                "effective_rate": (total_savings / rrsp_contribution * 100) if rrsp_contribution > 0 else 0
+            },
+            "bracket_dropped": bracket_dropped,
+            "optimal_rrsp_to_drop_bracket": optimal_rrsp,
+            "rrsp_limit_2026": 31560
+        }
 
 # =============== AUTH ENDPOINTS ===============
 
