@@ -264,7 +264,7 @@ export default function TaxProjectionPage() {
             <h3 className="font-heading font-semibold text-lg">Your Tax Savings</h3>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div className="p-4 rounded-lg bg-zinc-900">
               <p className="text-xs text-zinc-500 mb-1">Federal Savings</p>
               <p className="text-xl font-mono font-bold text-emerald-400">
@@ -275,6 +275,12 @@ export default function TaxProjectionPage() {
               <p className="text-xs text-zinc-500 mb-1">Ontario Savings</p>
               <p className="text-xl font-mono font-bold text-emerald-400">
                 {formatCurrency(projection.savings.ontario)}
+              </p>
+            </div>
+            <div className="p-4 rounded-lg bg-zinc-900">
+              <p className="text-xs text-zinc-500 mb-1">OHP Savings</p>
+              <p className="text-xl font-mono font-bold text-emerald-400">
+                {formatCurrency(projection.savings.ohp || 0)}
               </p>
             </div>
             <div className="p-4 rounded-lg bg-zinc-900">
