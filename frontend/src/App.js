@@ -14,6 +14,7 @@ import MileagePage from "@/pages/MileagePage";
 import ChargingPage from "@/pages/ChargingPage";
 import SisterModule from "@/pages/SisterModule";
 import SettingsPage from "@/pages/SettingsPage";
+import TaxProjectionPage from "@/pages/TaxProjectionPage";
 import Layout from "@/components/Layout";
 
 // Protected Route Component
@@ -80,6 +81,7 @@ function AppRoutes() {
         <Route path="mileage" element={<MileagePage />} />
         <Route path="charging" element={<ChargingPage />} />
         <Route path="sister" element={<SisterModule />} />
+        <Route path="tax-projection" element={<TaxProjectionPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       
