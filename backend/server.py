@@ -523,6 +523,11 @@ async def logout(response: Response):
 
 # =============== TOTP 2FA ENDPOINTS ===============
 
+def generate_backup_codes(count: int = 10) -> list:
+    """Generate random backup codes for 2FA recovery"""
+    import secrets
+    return [f"{secrets.token_hex(3)}-{secrets.token_hex(3)}" for _ in range(count)]
+
 @api_router.post("/auth/totp/setup")
 async def setup_totp(user: dict = Depends(get_current_user)):
     secret = pyotp.random_base32()
@@ -538,12 +543,26 @@ async def setup_totp(user: dict = Depends(get_current_user)):
     img.save(buffer, format="PNG")
     qr_base64 = base64.b64encode(buffer.getvalue()).decode()
     
+    # Generate backup codes
+    backup_codes = generate_backup_codes(10)
+    hashed_backup_codes = [hash_password(code) for code in backup_codes]
+    
     await db.users.update_one(
         {"user_id": user["user_id"]},
-        {"$set": {"totp_secret": secret, "totp_enabled": True, "totp_verified": False}}
+        {"$set": {
+            "totp_secret": secret, 
+            "totp_enabled": True, 
+            "totp_verified": False,
+            "backup_codes": hashed_backup_codes
+        }}
     )
     
-    return {"secret": secret, "qr_code": f"data:image/png;base64,{qr_base64}", "provisioning_uri": provisioning_uri}
+    return {
+        "secret": secret, 
+        "qr_code": f"data:image/png;base64,{qr_base64}", 
+        "provisioning_uri": provisioning_uri,
+        "backup_codes": backup_codes  # Only returned once during setup!
+    }
 
 @api_router.post("/auth/totp/verify")
 async def verify_totp_setup(data: TOTPVerify, user: dict = Depends(get_current_user)):
@@ -568,9 +587,58 @@ async def disable_totp(data: TOTPVerify, user: dict = Depends(get_current_user))
     
     await db.users.update_one(
         {"user_id": user["user_id"]},
-        {"$set": {"totp_enabled": False, "totp_verified": False, "totp_secret": None}}
+        {"$set": {"totp_enabled": False, "totp_verified": False, "totp_secret": None, "backup_codes": []}}
     )
     return {"success": True, "message": "2FA disabled"}
+
+@api_router.post("/auth/totp/use-backup")
+async def use_backup_code(code: str, request: Request, response: Response):
+    """Use a backup code for emergency 2FA recovery"""
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing temp token")
+    
+    temp_token = auth_header[7:]
+    try:
+        payload = jwt.decode(temp_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if not payload.get("requires_totp"):
+            raise HTTPException(status_code=400, detail="Invalid token type")
+        user_id = payload["user_id"]
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check backup codes
+    backup_codes = user.get("backup_codes", [])
+    code_valid = False
+    remaining_codes = []
+    
+    for hashed_code in backup_codes:
+        if verify_password(code, hashed_code):
+            code_valid = True
+        else:
+            remaining_codes.append(hashed_code)
+    
+    if not code_valid:
+        raise HTTPException(status_code=401, detail="Invalid backup code")
+    
+    # Remove used code
+    await db.users.update_one({"user_id": user_id}, {"$set": {"backup_codes": remaining_codes}})
+    
+    # Generate session token
+    token = create_jwt_token(user_id)
+    response.set_cookie(key="session_token", value=token, httponly=True, secure=True, samesite="none", path="/", max_age=86400)
+    
+    return {
+        "user_id": user["user_id"],
+        "email": user["email"],
+        "name": user["name"],
+        "token": token,
+        "remaining_backup_codes": len(remaining_codes)
+    }
 
 # =============== PROFILE ENDPOINTS ===============
 
