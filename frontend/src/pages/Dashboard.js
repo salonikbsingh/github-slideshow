@@ -297,7 +297,7 @@ export default function Dashboard() {
           <p className="text-xl font-mono font-bold text-white">
             {data.charging.total_kwh.toFixed(1)} kWh
           </p>
-          <p className="text-xs text-emerald-400">+{formatCurrency(data.charging.total_rebate)} rebate</p>
+          <p className="text-xs text-emerald-400">+{formatCurrency(data.charging.grizzle_rebate || 0)} Grizzl-E rebate</p>
         </motion.div>
 
         {/* Total Income */}
