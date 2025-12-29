@@ -8,157 +8,157 @@
       "test": "Root API Endpoint",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.181893"
+      "timestamp": "2025-12-29T03:43:05.028010"
     },
     {
       "test": "Health Check",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.228528"
+      "timestamp": "2025-12-29T03:43:05.063955"
     },
     {
       "test": "User Registration",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.526684"
+      "timestamp": "2025-12-29T03:43:05.372982"
     },
     {
       "test": "User Login",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.794954"
+      "timestamp": "2025-12-29T03:43:05.672296"
     },
     {
       "test": "Get Current User",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.843435"
+      "timestamp": "2025-12-29T03:43:05.710637"
     },
     {
       "test": "Create Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.900087"
+      "timestamp": "2025-12-29T03:43:05.754305"
     },
     {
       "test": "Get Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.939885"
+      "timestamp": "2025-12-29T03:43:05.795039"
     },
     {
       "test": "Update Profile",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:42.984769"
+      "timestamp": "2025-12-29T03:43:05.843440"
     },
     {
       "test": "Get Dashboard Data",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.067040"
+      "timestamp": "2025-12-29T03:43:06.093532"
     },
     {
       "test": "Dashboard Structure",
       "success": true,
       "details": "All required fields present",
-      "timestamp": "2025-12-29T03:24:43.067672"
+      "timestamp": "2025-12-29T03:43:06.094136"
     },
     {
       "test": "Create Transaction",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.118332"
+      "timestamp": "2025-12-29T03:43:06.131553"
     },
     {
       "test": "Get Transactions",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.155842"
+      "timestamp": "2025-12-29T03:43:06.170228"
     },
     {
       "test": "Delete Transaction",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.195372"
+      "timestamp": "2025-12-29T03:43:06.207609"
     },
     {
       "test": "Create Mileage Log",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.253472"
+      "timestamp": "2025-12-29T03:43:06.251533"
     },
     {
       "test": "Get Mileage Logs",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.290503"
+      "timestamp": "2025-12-29T03:43:06.287884"
     },
     {
       "test": "Delete Mileage Log",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.331675"
+      "timestamp": "2025-12-29T03:43:06.323253"
     },
     {
       "test": "Create Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.385125"
+      "timestamp": "2025-12-29T03:43:06.358128"
     },
     {
       "test": "EV Rebate Calculation",
       "success": true,
       "details": "Rebate: $1.36",
-      "timestamp": "2025-12-29T03:24:43.385784"
+      "timestamp": "2025-12-29T03:43:06.358606"
     },
     {
       "test": "Get Charging Sessions",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.427790"
+      "timestamp": "2025-12-29T03:43:06.395990"
     },
     {
       "test": "Delete Charging Session",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.462525"
+      "timestamp": "2025-12-29T03:43:06.430597"
     },
     {
       "test": "Create Sister Bill",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.521152"
+      "timestamp": "2025-12-29T03:43:06.464973"
     },
     {
       "test": "Bill Split Calculation",
       "success": true,
       "details": "Split: $100.00",
-      "timestamp": "2025-12-29T03:24:43.521865"
+      "timestamp": "2025-12-29T03:43:06.465435"
     },
     {
       "test": "Get Sister Bills",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.562695"
+      "timestamp": "2025-12-29T03:43:06.502086"
     },
     {
       "test": "Get Sister Summary",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.607172"
+      "timestamp": "2025-12-29T03:43:06.582675"
     },
     {
       "test": "Delete Sister Bill",
       "success": true,
       "details": "Status: 200 (expected 200)",
-      "timestamp": "2025-12-29T03:24:43.643615"
+      "timestamp": "2025-12-29T03:43:06.619573"
     },
     {
       "test": "CSV Export",
       "success": true,
       "details": "CSV file generated successfully",
-      "timestamp": "2025-12-29T03:24:43.688502"
+      "timestamp": "2025-12-29T03:43:06.657874"
     }
   ]
 }
