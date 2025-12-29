@@ -714,11 +714,11 @@ class CADFinanceAPITester:
         # Run test suites
         self.test_health_endpoints()
         
-        # Test new 2026 features first
-        self.test_2026_tax_features()
-        
         auth_success = self.test_auth_flow()
         if auth_success:
+            # Test 2026 Ontario tax implementation first (priority tests)
+            self.test_2026_ontario_tax_implementation()
+            
             self.test_profile_management()
             self.test_dashboard_data()
             self.test_transaction_crud()
@@ -727,7 +727,7 @@ class CADFinanceAPITester:
             self.test_sister_module()
             self.test_advanced_features()
             
-            # Test new authenticated features
+            # Test other authenticated features
             self.test_totp_backup_codes()
             self.test_grizzle_rebate_logic()
             self.test_sister_pdf_grizzle_credit()
